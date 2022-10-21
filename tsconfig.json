@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "esnext",
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "typeRoots": [
+        "./node_modules/@types",
+    ],
+    "types": [
+        "reflect-metadata"
+    ],
+    "allowJs": true, 
+    "noUnusedParameters": true, 
+    "emitDecoratorMetadata": true, 
+  },
+  "exclude": ["node_modules", "./**.js",  "./*.js"],
+}
