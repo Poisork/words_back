@@ -1186,7 +1186,7 @@ var HttpServer = /*#__PURE__*/function () {
       var build = this.app.build(); // this.app.build.
 
       console.log(6);
-      var app = build.listen(process.env.PORT || 3000); // build.on('request', app as any)
+      var app = build.listen(process.env.PORT || false); // build.on('request', app as any)
 
       console.log("Application listening on port ".concat(process.env.PORT, "..."));
       this.containerDI.bind(interfaces_1.TYPES.App).toConstantValue(app);
@@ -1295,7 +1295,8 @@ var FileController = /*#__PURE__*/function () {
                 return _context.abrupt("return", res.send("you must select a file."));
 
               case 2:
-                imgUrl = "https://build-wheat-rho.vercel.app/api/file/".concat(req.file.filename); // `${this.URL}/avatar/${req.file.filename}`;
+                // const imgUrl = `https://build-wheat-rho.vercel.app/api/file/${req.file.filename}`
+                imgUrl = "https://wordsback.herokuapp.com/api/file/".concat(req.file.filename); // `${this.URL}/avatar/${req.file.filename}`;
 
                 return _context.abrupt("return", res.send(imgUrl));
 
@@ -3496,6 +3497,9 @@ var WsServer = /*#__PURE__*/function () {
     this.app = app;
     this.server = new ws(app, {// Socket.IO options
       // transports: ["websocket"]
+      //   cors: {
+      //     origin: ["http://localhost:3000", "yoursite.herokuapp.com"],
+      // },
     });
     console.log(this.server); // this.server.on('request', this.app as any)
   }
@@ -3515,7 +3519,7 @@ var WsServer = /*#__PURE__*/function () {
       // });
       this.server.once('connection', /*#__PURE__*/function () {
         var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(socket) {
-          var roomMsg;
+          var roomMsg, that;
           return _regeneratorRuntime().wrap(function _callee2$(_context2) {
             while (1) {
               switch (_context2.prev = _context2.next) {
@@ -3531,9 +3535,10 @@ var WsServer = /*#__PURE__*/function () {
 
                 case 4:
                   roomMsg = _context2.sent;
-
-                  _this.server.emit("chat:".concat(roomID, ":created"), roomMsg === null || roomMsg === void 0 ? void 0 : roomMsg.toObject().messages);
-
+                  that = _this;
+                  setInterval(function () {
+                    return that.server.emit("chat:".concat(roomID, ":created"), roomMsg === null || roomMsg === void 0 ? void 0 : roomMsg.toObject().messages);
+                  }, 1000);
                   socket.on("chat:".concat(roomID), /*#__PURE__*/function () {
                     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(msg) {
                       var newMsg;
@@ -3556,7 +3561,9 @@ var WsServer = /*#__PURE__*/function () {
                               });
 
                             case 3:
-                              _this.server.emit("chat:".concat(roomID), newMsg);
+                              setInterval(function () {
+                                return that.server.emit("chat:".concat(roomID), newMsg);
+                              }, 1000);
 
                             case 4:
                             case "end":
@@ -3571,12 +3578,10 @@ var WsServer = /*#__PURE__*/function () {
                     };
                   }());
                   socket.on('disconnect', function () {
-                    console.log("".concat(userID, " user disconnected"));
-
-                    _this.server.emit("disconnect:".concat(roomID), "".concat(userID, " user disconnected"));
+                    console.log("".concat(userID, " user disconnected")); // this.server.emit(`disconnect:${roomID}`, `${userID} user disconnected`); 
                   });
 
-                case 8:
+                case 9:
                 case "end":
                   return _context2.stop();
               }
