@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 14);
+/******/ 	return __webpack_require__(__webpack_require__.s = 15);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -116,7 +116,7 @@ exports.authMiddleWare = void 0;
 
 var tslib_1 = __webpack_require__(0);
 
-var jsonwebtoken_1 = tslib_1.__importDefault(__webpack_require__(7));
+var jsonwebtoken_1 = tslib_1.__importDefault(__webpack_require__(9));
 
 var ApiError_1 = __webpack_require__(4); // import { jwtSecret } from './../../config/default.json'
 
@@ -239,34 +239,132 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.TYPES = void 0;
+
+var types_1 = __webpack_require__(8);
+
+Object.defineProperty(exports, "TYPES", {
+  enumerable: true,
+  get: function get() {
+    return types_1.TYPES;
+  }
+});
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.myContainer = exports.mainModule = void 0;
+
+var tslib_1 = __webpack_require__(0);
+
+var inversify_1 = __webpack_require__(7);
+
+var mongoose_1 = tslib_1.__importDefault(__webpack_require__(1)); // import { Server } from "../../server";
+
+
+var fileController_1 = __webpack_require__(20);
+
+var gridFS_1 = __webpack_require__(24); // import { FS } from "../controllers/intefaces";
+
+
+var interfaces_1 = __webpack_require__(5);
+
+var inversify_express_utils_1 = __webpack_require__(2);
+
+var authController_1 = __webpack_require__(27);
+
+var userController_1 = __webpack_require__(29);
+
+var repetitionController_1 = __webpack_require__(31);
+
+var dictionariesController_1 = __webpack_require__(33);
+
+var friendsController_1 = __webpack_require__(35);
+
+var socket_io_1 = __webpack_require__(36);
+
+var WsServer_1 = __webpack_require__(37);
+
+var roomController_1 = __webpack_require__(38);
+
+var myContainer = new inversify_1.Container();
+exports.myContainer = myContainer;
+exports.mainModule = new inversify_1.ContainerModule(function (bind, _unbind, _isBound, _rebind, _unbindAsync, _onActivation, _onDeactivation) {
+  // registerController(bind, AuthController)
+  bind(interfaces_1.TYPES.Auth).to(authController_1.AuthController).inSingletonScope();
+  bind(interfaces_1.TYPES.User).to(userController_1.UserController).inSingletonScope();
+  bind(interfaces_1.TYPES.Friend).to(friendsController_1.FriendsController).inSingletonScope();
+  bind(interfaces_1.TYPES.Dictionary).to(dictionariesController_1.DictionariesController).inSingletonScope();
+  bind(interfaces_1.TYPES.Repetition).to(repetitionController_1.RepetitionController).inSingletonScope();
+  bind(interfaces_1.TYPES.Room).to(roomController_1.RoomController).inSingletonScope();
+  bind(interfaces_1.TYPES.DbClient).toConstantValue(mongoose_1["default"].connection);
+  bind(interfaces_1.TYPES.Ws).toConstantValue(socket_io_1.Server);
+  bind(interfaces_1.TYPES.Fs).to(gridFS_1.GridFS).inSingletonScope();
+  bind(interfaces_1.TYPES.FileController).to(fileController_1.FileController).inSingletonScope(); // bind<Container>(TYPES.Container).toConstantValue(myContainer)
+
+  bind(interfaces_1.TYPES.WsServer).to(WsServer_1.WsServer).inSingletonScope();
+});
+
+function registerController(bind, constructor) {
+  bind(inversify_express_utils_1.TYPE.Controller).to(constructor).whenTargetNamed(constructor.name);
+} // import { Container, Inject, Service } from 'typedi';
+// DI with typedi
+// const container = Container.of();
+// const fs = new GridFS(mongoose.connection);
+// // const fileController = new FileController();
+// container.set("fs", fs);
+// // container.set("fileSystem", fileSystem);
+// const fileController = container.get(FileController);
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+module.exports = require("inversify");
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TYPES = void 0;
 var TYPES = {
   Fs: Symbol["for"]("Fs"),
   FileController: Symbol["for"]("FileController"),
   Server: Symbol["for"]("Server"),
   App: Symbol["for"]("App"),
   DbClient: Symbol("DbClient"),
+  Ws: Symbol("Ws"),
+  WsServer: Symbol("WsServer"),
   Repetition: Symbol('Repetition'),
   Dictionary: Symbol('Dictionary'),
   User: Symbol('User'),
   Friend: Symbol('Friend'),
-  Auth: Symbol('Auth')
+  Auth: Symbol('Auth'),
+  Room: Symbol('Room') // Container: Symbol('Container'),
+
 };
 exports.TYPES = TYPES;
 
 /***/ }),
-/* 6 */
-/***/ (function(module, exports) {
-
-module.exports = require("inversify");
-
-/***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports) {
 
 module.exports = require("jsonwebtoken");
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -289,9 +387,9 @@ var tslib_1 = __webpack_require__(0);
 
 var mongoose_1 = __webpack_require__(1);
 
-var bcryptjs_1 = tslib_1.__importDefault(__webpack_require__(27));
+var bcryptjs_1 = tslib_1.__importDefault(__webpack_require__(28));
 
-var jsonwebtoken_1 = tslib_1.__importDefault(__webpack_require__(7)); // import { jwtSecret } from './../../config/default.json'
+var jsonwebtoken_1 = tslib_1.__importDefault(__webpack_require__(9)); // import { jwtSecret } from './../../config/default.json'
 
 
 exports.userSchema = new mongoose_1.Schema({
@@ -454,7 +552,7 @@ exports.userSchema.methods.toAuthJSON = function (oldToken) {
 exports.User = (0, mongoose_1.model)('User', exports.userSchema);
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -799,94 +897,10 @@ function _updateUser() {
 exports.updateUser = updateUser;
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports) {
 
 module.exports = require("reflect-metadata");
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.TYPES = void 0;
-
-var types_1 = __webpack_require__(5);
-
-Object.defineProperty(exports, "TYPES", {
-  enumerable: true,
-  get: function get() {
-    return types_1.TYPES;
-  }
-});
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.myContainer = exports.mainModule = void 0;
-
-var tslib_1 = __webpack_require__(0);
-
-var inversify_1 = __webpack_require__(6);
-
-var mongoose_1 = tslib_1.__importDefault(__webpack_require__(1)); // import { Server } from "../../server";
-
-
-var fileController_1 = __webpack_require__(19);
-
-var gridFS_1 = __webpack_require__(23); // import { FS } from "../controllers/intefaces";
-
-
-var interfaces_1 = __webpack_require__(11);
-
-var inversify_express_utils_1 = __webpack_require__(2);
-
-var authController_1 = __webpack_require__(26);
-
-var userController_1 = __webpack_require__(28);
-
-var repetitionController_1 = __webpack_require__(29);
-
-var dictionariesController_1 = __webpack_require__(31);
-
-var friendsController_1 = __webpack_require__(33);
-
-var myContainer = new inversify_1.Container();
-exports.myContainer = myContainer;
-exports.mainModule = new inversify_1.ContainerModule(function (bind, _unbind, _isBound, _rebind, _unbindAsync, _onActivation, _onDeactivation) {
-  // registerController(bind, AuthController)
-  bind(interfaces_1.TYPES.Auth).to(authController_1.AuthController).inSingletonScope();
-  bind(interfaces_1.TYPES.User).to(userController_1.UserController).inSingletonScope();
-  bind(interfaces_1.TYPES.Friend).to(friendsController_1.FriendsController).inSingletonScope();
-  bind(interfaces_1.TYPES.Dictionary).to(dictionariesController_1.DictionariesController).inSingletonScope();
-  bind(interfaces_1.TYPES.Repetition).to(repetitionController_1.RepetitionController).inSingletonScope();
-  bind(interfaces_1.TYPES.DbClient).toConstantValue(mongoose_1["default"].connection);
-  bind(interfaces_1.TYPES.Fs).to(gridFS_1.GridFS).inSingletonScope();
-  bind(interfaces_1.TYPES.FileController).to(fileController_1.FileController).inSingletonScope();
-});
-
-function registerController(bind, constructor) {
-  bind(inversify_express_utils_1.TYPE.Controller).to(constructor).whenTargetNamed(constructor.name);
-} // import { Container, Inject, Service } from 'typedi';
-// DI with typedi
-// const container = Container.of();
-// const fs = new GridFS(mongoose.connection);
-// // const fileController = new FileController();
-// container.set("fs", fs);
-// // container.set("fileSystem", fileSystem);
-// const fileController = container.get(FileController);
 
 /***/ }),
 /* 13 */
@@ -928,6 +942,43 @@ exports.Friend = (0, mongoose_1.model)('Friends', exports.friendsSchema);
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Room = exports.roomSchema = void 0;
+
+var mongoose_1 = __webpack_require__(1);
+
+exports.roomSchema = new mongoose_1.Schema({
+  admin: {
+    type: mongoose_1.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  moderators: [{
+    type: mongoose_1.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  users: [{
+    type: mongoose_1.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  messages: [{
+    msg: String,
+    author: mongoose_1.Schema.Types.ObjectId,
+    date: Date
+  }]
+}, {
+  timestamps: true
+});
+exports.Room = (0, mongoose_1.model)('Rooms', exports.roomSchema);
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return generator._invoke = function (innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; }(innerFn, self, context), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; this._invoke = function (method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); }; } function maybeInvokeDelegate(delegate, context) { var method = delegate.iterator[context.method]; if (undefined === method) { if (context.delegate = null, "throw" === context.method) { if (delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method)) return ContinueSentinel; context.method = "throw", context.arg = new TypeError("The iterator does not provide a 'throw' method"); } return ContinueSentinel; } var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, define(Gp, "constructor", GeneratorFunctionPrototype), define(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (object) { var keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
@@ -942,17 +993,17 @@ Object.defineProperty(exports, "__esModule", {
 
 var tslib_1 = __webpack_require__(0);
 
-__webpack_require__(10);
+__webpack_require__(12);
 
-var express_1 = tslib_1.__importDefault(__webpack_require__(15));
+var express_1 = tslib_1.__importDefault(__webpack_require__(16));
 
-var ip_1 = tslib_1.__importDefault(__webpack_require__(16));
+var ip_1 = tslib_1.__importDefault(__webpack_require__(17));
 
 var mongoose_1 = tslib_1.__importDefault(__webpack_require__(1));
 
-var Server_1 = __webpack_require__(17);
+var HttpServer_1 = __webpack_require__(18);
 
-var containerDI_1 = __webpack_require__(12);
+var containerDI_1 = __webpack_require__(6);
 
 console.log('local ip my computer: ', ip_1["default"].address());
 
@@ -967,7 +1018,7 @@ function _start() {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            server = new Server_1.Server(express_1["default"], mongoose_1["default"], containerDI_1.myContainer);
+            server = new HttpServer_1.HttpServer(express_1["default"], mongoose_1["default"], containerDI_1.myContainer);
             console.log('used dependency injection');
             server.listen();
             _context2.next = 5;
@@ -1000,19 +1051,19 @@ _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
 }))();
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 module.exports = require("express");
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 module.exports = require("ip");
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1035,27 +1086,27 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Server = void 0;
+exports.HttpServer = void 0;
 
 var tslib_1 = __webpack_require__(0); // import { router } from "../routes";
 
 
-var errorHandlingMiddleware_1 = __webpack_require__(18); // import { mongoURI, port } from './../../config/default.json'
+var errorHandlingMiddleware_1 = __webpack_require__(19); // import { mongoURI, port } from './../../config/default.json'
 
 
-var interfaces_1 = __webpack_require__(11);
+var interfaces_1 = __webpack_require__(5);
 
 var inversify_express_utils_1 = __webpack_require__(2);
 
-var containerDI_1 = __webpack_require__(12);
+var containerDI_1 = __webpack_require__(6);
 
-var cors_1 = tslib_1.__importDefault(__webpack_require__(34));
+var cors_1 = tslib_1.__importDefault(__webpack_require__(39));
 
-var Server = /*#__PURE__*/function () {
-  function Server(framework, dataBase, containerDI) {
+var HttpServer = /*#__PURE__*/function () {
+  function HttpServer(framework, dataBase, containerDI) {
     var _this = this;
 
-    _classCallCheck(this, Server);
+    _classCallCheck(this, HttpServer);
 
     this.framework = void 0;
     this.dataBase = void 0;
@@ -1082,7 +1133,7 @@ var Server = /*#__PURE__*/function () {
     console.log(4);
   }
 
-  _createClass(Server, [{
+  _createClass(HttpServer, [{
     key: "connectToDB",
     value: function () {
       var _connectToDB = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
@@ -1132,22 +1183,22 @@ var Server = /*#__PURE__*/function () {
     key: "listen",
     value: function listen() {
       console.log(5);
-      var app = this.app.build(); // this.app.build.
+      var build = this.app.build(); // this.app.build.
 
       console.log(6);
-      app.listen("3000" || false);
+      var app = build.listen("3000" || false);
       console.log("Application listening on port ".concat("3000", "..."));
       this.containerDI.bind(interfaces_1.TYPES.App).toConstantValue(app);
     }
   }]);
 
-  return Server;
+  return HttpServer;
 }();
 
-exports.Server = Server;
+exports.HttpServer = HttpServer;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1175,7 +1226,7 @@ function ErrorHandleMiddleware(err, _req, res, _next) {
 exports.ErrorHandleMiddleware = ErrorHandleMiddleware;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1205,17 +1256,17 @@ var tslib_1 = __webpack_require__(0); // import { Fs, GridFS } from "./gridFS";
 
 var ApiError_1 = __webpack_require__(4);
 
-__webpack_require__(10);
+__webpack_require__(12);
 
-var inversify_1 = __webpack_require__(6);
+var inversify_1 = __webpack_require__(7);
 
-var types_1 = __webpack_require__(5);
+var types_1 = __webpack_require__(8);
 
 var inversify_express_utils_1 = __webpack_require__(2);
 
 var authMiddleware_1 = __webpack_require__(3);
 
-var file_1 = __webpack_require__(20); // @injectable()
+var file_1 = __webpack_require__(21); // @injectable()
 
 
 var FileController = /*#__PURE__*/function () {
@@ -1375,7 +1426,7 @@ exports.FileController = FileController; // export const fileController = new Fi
 // export const fileController = container.registerSingleton<FileController>()
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1388,9 +1439,9 @@ exports.upload = void 0;
 
 var tslib_1 = __webpack_require__(0);
 
-var multer_1 = tslib_1.__importDefault(__webpack_require__(21));
+var multer_1 = tslib_1.__importDefault(__webpack_require__(22));
 
-var multer_gridfs_storage_1 = __webpack_require__(22); // const conn = mongoose.createConnection(mongoURI);
+var multer_gridfs_storage_1 = __webpack_require__(23); // const conn = mongoose.createConnection(mongoURI);
 // const conn = mongoose.connection;
 // //Init gfs 
 // let gfs; 
@@ -1441,19 +1492,19 @@ exports.upload = (0, multer_1["default"])({
 });
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports) {
 
 module.exports = require("multer");
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports) {
 
 module.exports = require("multer-gridfs-storage");
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1496,9 +1547,9 @@ var tslib_1 = __webpack_require__(0);
 
 var mongoose_1 = tslib_1.__importDefault(__webpack_require__(1));
 
-var gridfs_stream_1 = tslib_1.__importDefault(__webpack_require__(24));
+var gridfs_stream_1 = tslib_1.__importDefault(__webpack_require__(25));
 
-var modules_1 = __webpack_require__(25); // @injectable()
+var modules_1 = __webpack_require__(26); // @injectable()
 
 
 var GridFS = /*#__PURE__*/function (_modules_1$FS) {
@@ -1617,13 +1668,13 @@ exports.GridFS = GridFS; // const c = new GridFS(new mongoose.Connection)
 // export const gridFs = new GridFS(mongoose.connection)
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = require("gridfs-stream");
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1642,9 +1693,9 @@ exports.FS = void 0;
 
 var tslib_1 = __webpack_require__(0);
 
-var inversify_1 = __webpack_require__(6);
+var inversify_1 = __webpack_require__(7);
 
-var types_1 = __webpack_require__(5);
+var types_1 = __webpack_require__(8);
 
 var FS = /*#__PURE__*/_createClass( // @inject(TYPES.DbClient) protected abstract conn: T2
 function FS(connection) {
@@ -1658,7 +1709,7 @@ FS = tslib_1.__decorate([(0, inversify_1.injectable)(), tslib_1.__param(0, (0, i
 exports.FS = FS;
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1687,9 +1738,9 @@ var tslib_1 = __webpack_require__(0);
 
 var ApiError_1 = __webpack_require__(4);
 
-var User_1 = __webpack_require__(8);
+var User_1 = __webpack_require__(10);
 
-var jsonwebtoken_1 = tslib_1.__importDefault(__webpack_require__(7)); // import { jwtSecret } from './../../config/default.json'
+var jsonwebtoken_1 = tslib_1.__importDefault(__webpack_require__(9)); // import { jwtSecret } from './../../config/default.json'
 
 
 var inversify_express_utils_1 = __webpack_require__(2);
@@ -1946,13 +1997,13 @@ exports.AuthController = AuthController;
 exports.authController = new AuthController();
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports) {
 
 module.exports = require("bcryptjs");
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1985,9 +2036,9 @@ exports.userController = exports.UserController = void 0;
 
 var tslib_1 = __webpack_require__(0);
 
-var User_1 = __webpack_require__(8);
+var User_1 = __webpack_require__(10);
 
-var base_1 = __webpack_require__(9);
+var base_1 = __webpack_require__(11);
 
 var inversify_express_utils_1 = __webpack_require__(2);
 
@@ -1995,7 +2046,7 @@ var authMiddleware_1 = __webpack_require__(3);
 
 var Friend_1 = __webpack_require__(13);
 
-var mongoose_1 = tslib_1.__importDefault(__webpack_require__(1));
+var friends_1 = __webpack_require__(30);
 
 var UserController = /*#__PURE__*/function () {
   function UserController() {
@@ -2003,23 +2054,26 @@ var UserController = /*#__PURE__*/function () {
   }
 
   _createClass(UserController, [{
-    key: "getUsers",
+    key: "friends",
     value: function () {
-      var _getUsers = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(request, response) {
-        var idUser, usersModel;
+      var _friends = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(request, response) {
+        var idUser, users, friends;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 idUser = request._user.idUser;
                 _context.next = 3;
-                return User_1.User.find();
+                return (0, friends_1.findFriends)(User_1.User, Friend_1.Friend, idUser);
 
               case 3:
-                usersModel = _context.sent;
-                return _context.abrupt("return", response.send(usersModel));
+                users = _context.sent;
+                friends = users.filter(function (friend) {
+                  return friend.match.length;
+                });
+                return _context.abrupt("return", response.send(friends));
 
-              case 5:
+              case 6:
               case "end":
                 return _context.stop();
             }
@@ -2027,73 +2081,29 @@ var UserController = /*#__PURE__*/function () {
         }, _callee);
       }));
 
-      function getUsers(_x, _x2) {
-        return _getUsers.apply(this, arguments);
+      function friends(_x, _x2) {
+        return _friends.apply(this, arguments);
       }
 
-      return getUsers;
+      return friends;
     }()
   }, {
-    key: "friends",
+    key: "friendsCandidates",
     value: function () {
-      var _friends = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(request, response) {
-        var idUser, res, friends;
+      var _friendsCandidates = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(request, response) {
+        var idUser, users, friends;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                idUser = request._user.idUser; // const { candidateFriendId } = request.query;
-                // const res = await User.aggregate([
-                //   {
-                //     "$lookup":{
-                //       from: Friend.collection.name,
-                //       localField:  'recipient',
-                //       foreignField: 'status',
-                //       as: 'kek'
-                //     }
-                //   },
-                //   {
-                //     "$addFields": {
-                //       "friendsStatus": {
-                //         "$ifNull": [{ "$min": "$friends.status" }, 0]
-                //       }
-                //     }
-                //   }
-                // ])
-
+                idUser = request._user.idUser;
                 _context2.next = 3;
-                return User_1.User.aggregate([{
-                  "$lookup": {
-                    "from": Friend_1.Friend.collection.name,
-                    localField: "friends",
-                    foreignField: "_id",
-                    "let": {
-                      "friends": "$friends"
-                    },
-                    "as": "match",
-                    "pipeline": [{
-                      "$match": {
-                        "recipient": new mongoose_1["default"].Types.ObjectId(idUser),
-                        "$expr": {
-                          "$in": ["$_id", "$$friends"]
-                        }
-                      }
-                    } // { "$project": { "status": 1 } }
-                    ]
-                  }
-                } // {
-                //   "$addFields": {
-                //     "friendsStatus": {
-                //       "$ifNull": [{ "$min": "$friends.status" }, 0]
-                //     }
-                //   }
-                // }
-                ]);
+                return (0, friends_1.findFriends)(User_1.User, Friend_1.Friend, idUser);
 
               case 3:
-                res = _context2.sent;
-                friends = res.filter(function (friend) {
-                  return friend.match.length;
+                users = _context2.sent;
+                friends = users.filter(function (friend) {
+                  return !friend.match.length && friend._id.toString() !== idUser;
                 });
                 return _context2.abrupt("return", response.send(friends));
 
@@ -2105,63 +2115,7 @@ var UserController = /*#__PURE__*/function () {
         }, _callee2);
       }));
 
-      function friends(_x3, _x4) {
-        return _friends.apply(this, arguments);
-      }
-
-      return friends;
-    }()
-  }, {
-    key: "friendsCandidates",
-    value: function () {
-      var _friendsCandidates = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(request, response) {
-        var idUser, res, friends;
-        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                idUser = request._user.idUser;
-                _context3.next = 3;
-                return User_1.User.aggregate([{
-                  "$lookup": {
-                    "from": Friend_1.Friend.collection.name,
-                    localField: "friends",
-                    foreignField: "_id",
-                    "let": {
-                      "friends": "$friends"
-                    },
-                    "as": "match",
-                    "pipeline": [{
-                      "$match": {
-                        "recipient": new mongoose_1["default"].Types.ObjectId(idUser),
-                        "$expr": {
-                          "$in": ["$_id", "$$friends"]
-                        }
-                      }
-                    }, {
-                      "$project": {
-                        "status": 1
-                      }
-                    }]
-                  }
-                }]);
-
-              case 3:
-                res = _context3.sent;
-                friends = res.filter(function (friend) {
-                  return !friend.match.length && friend._id.toString() !== idUser;
-                });
-                return _context3.abrupt("return", response.send(friends));
-
-              case 6:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3);
-      }));
-
-      function friendsCandidates(_x5, _x6) {
+      function friendsCandidates(_x3, _x4) {
         return _friendsCandidates.apply(this, arguments);
       }
 
@@ -2170,22 +2124,22 @@ var UserController = /*#__PURE__*/function () {
   }, {
     key: "patchActivityDate",
     value: function () {
-      var _patchActivityDate = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(request, response) {
+      var _patchActivityDate = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(request, response) {
         var idUser, userModel, activityDate;
-        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
                 idUser = request._user.idUser;
-                _context4.next = 3;
+                _context3.next = 3;
                 return User_1.User.findOne({
                   _id: idUser
                 });
 
               case 3:
-                userModel = _context4.sent;
+                userModel = _context3.sent;
                 activityDate = new Date();
-                _context4.next = 7;
+                _context3.next = 7;
                 return User_1.User.findOneAndUpdate({
                   _id: idUser
                 }, _objectSpread(_objectSpread({}, userModel === null || userModel === void 0 ? void 0 : userModel.toObject()), {}, {
@@ -2195,17 +2149,17 @@ var UserController = /*#__PURE__*/function () {
                 });
 
               case 7:
-                return _context4.abrupt("return", response.status(204).send());
+                return _context3.abrupt("return", response.status(204).send());
 
               case 8:
               case "end":
-                return _context4.stop();
+                return _context3.stop();
             }
           }
-        }, _callee4);
+        }, _callee3);
       }));
 
-      function patchActivityDate(_x7, _x8) {
+      function patchActivityDate(_x5, _x6) {
         return _patchActivityDate.apply(this, arguments);
       }
 
@@ -2214,15 +2168,48 @@ var UserController = /*#__PURE__*/function () {
   }, {
     key: "patchAvatar",
     value: function () {
-      var _patchAvatar = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(request, response) {
+      var _patchAvatar = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(request, response) {
         var avatar, updatedField;
-        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
                 avatar = request.body.avatar;
                 updatedField = {
                   avatar: avatar
+                };
+                _context4.next = 4;
+                return (0, base_1.updateUser)(request, User_1.User, updatedField);
+
+              case 4:
+                return _context4.abrupt("return", response.status(204).send());
+
+              case 5:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }));
+
+      function patchAvatar(_x7, _x8) {
+        return _patchAvatar.apply(this, arguments);
+      }
+
+      return patchAvatar;
+    }()
+  }, {
+    key: "patchProfilePicture",
+    value: function () {
+      var _patchProfilePicture = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(request, response) {
+        var profilePicture, updatedField;
+        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                profilePicture = request.body.profilePicture;
+                updatedField = {
+                  profilePicture: profilePicture
                 };
                 _context5.next = 4;
                 return (0, base_1.updateUser)(request, User_1.User, updatedField);
@@ -2238,40 +2225,7 @@ var UserController = /*#__PURE__*/function () {
         }, _callee5);
       }));
 
-      function patchAvatar(_x9, _x10) {
-        return _patchAvatar.apply(this, arguments);
-      }
-
-      return patchAvatar;
-    }()
-  }, {
-    key: "patchProfilePicture",
-    value: function () {
-      var _patchProfilePicture = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(request, response) {
-        var profilePicture, updatedField;
-        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-          while (1) {
-            switch (_context6.prev = _context6.next) {
-              case 0:
-                profilePicture = request.body.profilePicture;
-                updatedField = {
-                  profilePicture: profilePicture
-                };
-                _context6.next = 4;
-                return (0, base_1.updateUser)(request, User_1.User, updatedField);
-
-              case 4:
-                return _context6.abrupt("return", response.status(204).send());
-
-              case 5:
-              case "end":
-                return _context6.stop();
-            }
-          }
-        }, _callee6);
-      }));
-
-      function patchProfilePicture(_x11, _x12) {
+      function patchProfilePicture(_x9, _x10) {
         return _patchProfilePicture.apply(this, arguments);
       }
 
@@ -2280,22 +2234,56 @@ var UserController = /*#__PURE__*/function () {
   }, {
     key: "patchLanguage",
     value: function () {
-      var _patchLanguage = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(request, response) {
+      var _patchLanguage = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(request, response) {
         var translatedLanguage, updatedField, data;
-        return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context7.prev = _context7.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
                 translatedLanguage = request.body.translatedLanguage;
                 updatedField = {
                   translatedLanguage: translatedLanguage
+                };
+                _context6.next = 4;
+                return (0, base_1.updateUser)(request, User_1.User, updatedField);
+
+              case 4:
+                data = _context6.sent;
+                return _context6.abrupt("return", response.status(204).send(data === null || data === void 0 ? void 0 : data.toObject().language));
+
+              case 6:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6);
+      }));
+
+      function patchLanguage(_x11, _x12) {
+        return _patchLanguage.apply(this, arguments);
+      }
+
+      return patchLanguage;
+    }()
+  }, {
+    key: "patchTranslatedLanguage",
+    value: function () {
+      var _patchTranslatedLanguage = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(request, response) {
+        var language, updatedField, data;
+        return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+          while (1) {
+            switch (_context7.prev = _context7.next) {
+              case 0:
+                language = request.body.language;
+                updatedField = {
+                  language: language
                 };
                 _context7.next = 4;
                 return (0, base_1.updateUser)(request, User_1.User, updatedField);
 
               case 4:
                 data = _context7.sent;
-                return _context7.abrupt("return", response.status(204).send(data === null || data === void 0 ? void 0 : data.toObject().language));
+                return _context7.abrupt("return", response.status(204).send(data === null || data === void 0 ? void 0 : data.toObject().translatedLanguage));
 
               case 6:
               case "end":
@@ -2305,41 +2293,7 @@ var UserController = /*#__PURE__*/function () {
         }, _callee7);
       }));
 
-      function patchLanguage(_x13, _x14) {
-        return _patchLanguage.apply(this, arguments);
-      }
-
-      return patchLanguage;
-    }()
-  }, {
-    key: "patchTranslatedLanguage",
-    value: function () {
-      var _patchTranslatedLanguage = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(request, response) {
-        var language, updatedField, data;
-        return _regeneratorRuntime().wrap(function _callee8$(_context8) {
-          while (1) {
-            switch (_context8.prev = _context8.next) {
-              case 0:
-                language = request.body.language;
-                updatedField = {
-                  language: language
-                };
-                _context8.next = 4;
-                return (0, base_1.updateUser)(request, User_1.User, updatedField);
-
-              case 4:
-                data = _context8.sent;
-                return _context8.abrupt("return", response.status(204).send(data === null || data === void 0 ? void 0 : data.toObject().translatedLanguage));
-
-              case 6:
-              case "end":
-                return _context8.stop();
-            }
-          }
-        }, _callee8);
-      }));
-
-      function patchTranslatedLanguage(_x15, _x16) {
+      function patchTranslatedLanguage(_x13, _x14) {
         return _patchTranslatedLanguage.apply(this, arguments);
       }
 
@@ -2349,8 +2303,6 @@ var UserController = /*#__PURE__*/function () {
 
   return UserController;
 }();
-
-tslib_1.__decorate([(0, inversify_express_utils_1.httpGet)('/users'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], UserController.prototype, "getUsers", null);
 
 tslib_1.__decorate([(0, inversify_express_utils_1.httpGet)('/friends'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], UserController.prototype, "friends", null);
 
@@ -2373,7 +2325,73 @@ exports.UserController = UserController; // async function toBuffer (avatar: str
 exports.userController = new UserController();
 
 /***/ }),
-/* 29 */
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return generator._invoke = function (innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; }(innerFn, self, context), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; this._invoke = function (method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); }; } function maybeInvokeDelegate(delegate, context) { var method = delegate.iterator[context.method]; if (undefined === method) { if (context.delegate = null, "throw" === context.method) { if (delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method)) return ContinueSentinel; context.method = "throw", context.arg = new TypeError("The iterator does not provide a 'throw' method"); } return ContinueSentinel; } var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, define(Gp, "constructor", GeneratorFunctionPrototype), define(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (object) { var keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.findFriends = void 0;
+
+var tslib_1 = __webpack_require__(0);
+
+var mongoose_1 = tslib_1.__importDefault(__webpack_require__(1));
+
+function findFriends(_x, _x2, _x3) {
+  return _findFriends.apply(this, arguments);
+}
+
+function _findFriends() {
+  _findFriends = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(UserModel, FriendModel, id) {
+    return _regeneratorRuntime().wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            return _context.abrupt("return", UserModel.aggregate([{
+              "$lookup": {
+                "from": FriendModel.collection.name,
+                localField: "friends",
+                foreignField: "_id",
+                "let": {
+                  "friends": "$friends"
+                },
+                "as": "match",
+                "pipeline": [{
+                  "$match": {
+                    "recipient": new mongoose_1["default"].Types.ObjectId(id),
+                    "$expr": {
+                      "$in": ["$_id", "$$friends"]
+                    }
+                  }
+                }]
+              }
+            }]));
+
+          case 1:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _findFriends.apply(this, arguments);
+}
+
+exports.findFriends = findFriends;
+
+/***/ }),
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2404,9 +2422,9 @@ var inversify_express_utils_1 = __webpack_require__(2);
 
 var authMiddleware_1 = __webpack_require__(3);
 
-var Repetitions_1 = __webpack_require__(30);
+var Repetitions_1 = __webpack_require__(32);
 
-var base_1 = __webpack_require__(9);
+var base_1 = __webpack_require__(11);
 
 var RepetitionController = /*#__PURE__*/function () {
   function RepetitionController() {
@@ -2522,7 +2540,7 @@ exports.RepetitionController = RepetitionController;
 exports.repetitionController = new RepetitionController();
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2601,7 +2619,7 @@ exports.repetitionSchema = new mongoose_1.Schema({
 exports.Repetition = (0, mongoose_1.model)('Repetition', exports.repetitionSchema);
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2632,9 +2650,9 @@ var inversify_express_utils_1 = __webpack_require__(2);
 
 var authMiddleware_1 = __webpack_require__(3);
 
-var Dictionary_1 = __webpack_require__(32);
+var Dictionary_1 = __webpack_require__(34);
 
-var base_1 = __webpack_require__(9);
+var base_1 = __webpack_require__(11);
 
 var DictionariesController = /*#__PURE__*/function () {
   function DictionariesController() {
@@ -3102,7 +3120,7 @@ exports.DictionariesController = DictionariesController;
 exports.dictionariesController = new DictionariesController();
 
 /***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3164,7 +3182,7 @@ exports.TranslatedDictionary = (0, mongoose_1.model)('TranslatedDictionary', exp
 exports.StaticTranslatedDictionary = (0, mongoose_1.model)('StaticTranslatedDictionary', exports.dictionarySchema);
 
 /***/ }),
-/* 33 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3191,7 +3209,7 @@ exports.friendsController = exports.FriendsController = void 0;
 
 var tslib_1 = __webpack_require__(0);
 
-var User_1 = __webpack_require__(8);
+var User_1 = __webpack_require__(10);
 
 var inversify_express_utils_1 = __webpack_require__(2);
 
@@ -3422,7 +3440,398 @@ exports.FriendsController = FriendsController;
 exports.friendsController = new FriendsController();
 
 /***/ }),
-/* 34 */
+/* 36 */
+/***/ (function(module, exports) {
+
+module.exports = require("socket.io");
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return generator._invoke = function (innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; }(innerFn, self, context), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; this._invoke = function (method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); }; } function maybeInvokeDelegate(delegate, context) { var method = delegate.iterator[context.method]; if (undefined === method) { if (context.delegate = null, "throw" === context.method) { if (delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method)) return ContinueSentinel; context.method = "throw", context.arg = new TypeError("The iterator does not provide a 'throw' method"); } return ContinueSentinel; } var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, define(Gp, "constructor", GeneratorFunctionPrototype), define(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (object) { var keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.WsServer = void 0;
+
+var tslib_1 = __webpack_require__(0);
+
+var inversify_1 = __webpack_require__(7);
+
+var interfaces_1 = __webpack_require__(5);
+
+var containerDI_1 = __webpack_require__(6);
+
+var Room_1 = __webpack_require__(14);
+
+var mongoose_1 = tslib_1.__importDefault(__webpack_require__(1));
+
+var WsServer = /*#__PURE__*/function () {
+  function WsServer(ws) {
+    _classCallCheck(this, WsServer);
+
+    this.ws = void 0;
+    this.server = void 0;
+    this.app = void 0;
+    this.ws = ws;
+    var app = containerDI_1.myContainer.get(interfaces_1.TYPES.App);
+    this.app = app;
+    this.server = new ws(app, {// Socket.IO options
+    });
+  }
+
+  _createClass(WsServer, [{
+    key: "joinToRoom",
+    value: function joinToRoom(roomID, userID) {
+      var _this = this;
+
+      // this.server.on('connection', (socket) => {
+      //   // socket.emit('news', { hello: 'world' });
+      //   socket.broadcast.emit('chat');
+      //   
+      //   // socket.on('news', function (data: any) {
+      //   //   socket.emit('news', data);
+      //   // });
+      // });
+      this.server.once('connection', /*#__PURE__*/function () {
+        var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(socket) {
+          var roomMsg;
+          return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+            while (1) {
+              switch (_context2.prev = _context2.next) {
+                case 0:
+                  console.log("".concat(userID, " user connected")); // const idRoom = ''
+
+                  _context2.next = 3;
+                  return Room_1.Room.findOne({
+                    _id: roomID
+                  });
+
+                case 3:
+                  roomMsg = _context2.sent;
+
+                  _this.server.emit("chat:".concat(roomID, ":created"), roomMsg === null || roomMsg === void 0 ? void 0 : roomMsg.toObject().messages);
+
+                  socket.on("chat:".concat(roomID), /*#__PURE__*/function () {
+                    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(msg) {
+                      var newMsg;
+                      return _regeneratorRuntime().wrap(function _callee$(_context) {
+                        while (1) {
+                          switch (_context.prev = _context.next) {
+                            case 0:
+                              newMsg = {
+                                msg: msg,
+                                author: new mongoose_1["default"].Types.ObjectId(userID),
+                                date: new Date()
+                              };
+                              _context.next = 3;
+                              return Room_1.Room.updateOne({
+                                _id: roomID
+                              }, {
+                                "$push": {
+                                  "messages": newMsg
+                                }
+                              });
+
+                            case 3:
+                              _this.server.emit("chat:".concat(roomID), newMsg);
+
+                            case 4:
+                            case "end":
+                              return _context.stop();
+                          }
+                        }
+                      }, _callee);
+                    }));
+
+                    return function (_x2) {
+                      return _ref2.apply(this, arguments);
+                    };
+                  }());
+                  socket.on('disconnect', function () {
+                    console.log("".concat(userID, " user disconnected"));
+
+                    _this.server.emit("disconnect:".concat(roomID), "".concat(userID, " user disconnected"));
+                  });
+
+                case 7:
+                case "end":
+                  return _context2.stop();
+              }
+            }
+          }, _callee2);
+        }));
+
+        return function (_x) {
+          return _ref.apply(this, arguments);
+        };
+      }());
+    }
+  }]);
+
+  return WsServer;
+}();
+
+WsServer = tslib_1.__decorate([(0, inversify_1.injectable)(), tslib_1.__param(0, (0, inversify_1.inject)(interfaces_1.TYPES.Ws)), tslib_1.__metadata("design:paramtypes", [Object])], WsServer);
+exports.WsServer = WsServer;
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return generator._invoke = function (innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; }(innerFn, self, context), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; this._invoke = function (method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); }; } function maybeInvokeDelegate(delegate, context) { var method = delegate.iterator[context.method]; if (undefined === method) { if (context.delegate = null, "throw" === context.method) { if (delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method)) return ContinueSentinel; context.method = "throw", context.arg = new TypeError("The iterator does not provide a 'throw' method"); } return ContinueSentinel; } var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, define(Gp, "constructor", GeneratorFunctionPrototype), define(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (object) { var keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.roomController = exports.RoomController = void 0;
+
+var tslib_1 = __webpack_require__(0);
+
+var inversify_express_utils_1 = __webpack_require__(2);
+
+var authMiddleware_1 = __webpack_require__(3);
+
+var Room_1 = __webpack_require__(14);
+
+var mongoose_1 = tslib_1.__importDefault(__webpack_require__(1));
+
+var containerDI_1 = __webpack_require__(6);
+
+var interfaces_1 = __webpack_require__(5);
+
+var RoomController = /*#__PURE__*/function () {
+  function RoomController() {
+    _classCallCheck(this, RoomController);
+  }
+
+  _createClass(RoomController, [{
+    key: "createRoom",
+    value: function () {
+      var _createRoom = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(request, response) {
+        var idUser, room;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                idUser = request._user.idUser; // const { candidateFriendId } = request.query;
+
+                room = new Room_1.Room({
+                  admin: new mongoose_1["default"].Types.ObjectId(idUser),
+                  users: [new mongoose_1["default"].Types.ObjectId(idUser)],
+                  messages: []
+                });
+                _context.next = 4;
+                return room.save();
+
+              case 4:
+                return _context.abrupt("return", response.json(room.toObject()));
+
+              case 5:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+
+      function createRoom(_x, _x2) {
+        return _createRoom.apply(this, arguments);
+      }
+
+      return createRoom;
+    }()
+  }, {
+    key: "getRooms",
+    value: function () {
+      var _getRooms = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(request, response) {
+        var idUser, rooms;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                idUser = request._user.idUser; // const { candidateFriendId } = request.query;
+
+                _context2.next = 3;
+                return Room_1.Room.find({
+                  "users": new mongoose_1["default"].Types.ObjectId(idUser)
+                });
+
+              case 3:
+                rooms = _context2.sent;
+                return _context2.abrupt("return", response.json(rooms));
+
+              case 5:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }));
+
+      function getRooms(_x3, _x4) {
+        return _getRooms.apply(this, arguments);
+      }
+
+      return getRooms;
+    }()
+  }, {
+    key: "setUserInRoom",
+    value: function () {
+      var _setUserInRoom = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(request, response) {
+        var idUser, friendId, roomId, updatedRoom;
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                idUser = request._user.idUser;
+                friendId = request.query.friendId;
+                roomId = request.query.roomId;
+                _context3.next = 5;
+                return Room_1.Room.updateOne({
+                  _id: roomId
+                }, {
+                  "$push": {
+                    "users": friendId
+                  }
+                });
+
+              case 5:
+                updatedRoom = _context3.sent;
+                return _context3.abrupt("return", response.json(updatedRoom));
+
+              case 7:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }));
+
+      function setUserInRoom(_x5, _x6) {
+        return _setUserInRoom.apply(this, arguments);
+      }
+
+      return setUserInRoom;
+    }()
+  }, {
+    key: "joinToRoom",
+    value: function () {
+      var _joinToRoom = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(request, response) {
+        var idUser, roomID, ws;
+        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                idUser = request._user.idUser;
+                roomID = request.query.roomID;
+                ws = containerDI_1.myContainer.get(interfaces_1.TYPES.WsServer);
+                ws.joinToRoom(roomID, idUser);
+                return _context4.abrupt("return", response.send('ok'));
+
+              case 5:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }));
+
+      function joinToRoom(_x7, _x8) {
+        return _joinToRoom.apply(this, arguments);
+      }
+
+      return joinToRoom;
+    }()
+  }, {
+    key: "deleteRoom",
+    value: function () {
+      var _deleteRoom = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(request, response) {
+        var idUser, roomID, rooms;
+        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                idUser = request._user.idUser;
+                roomID = request.query.roomID;
+                _context5.next = 4;
+                return Room_1.Room.findOneAndDelete({
+                  _id: roomID
+                }, {
+                  "new": true
+                });
+
+              case 4:
+                rooms = _context5.sent;
+                return _context5.abrupt("return", response.json(rooms));
+
+              case 6:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5);
+      }));
+
+      function deleteRoom(_x9, _x10) {
+        return _deleteRoom.apply(this, arguments);
+      }
+
+      return deleteRoom;
+    }()
+  }]);
+
+  return RoomController;
+}();
+
+tslib_1.__decorate([(0, inversify_express_utils_1.httpGet)('/createRoom'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], RoomController.prototype, "createRoom", null);
+
+tslib_1.__decorate([(0, inversify_express_utils_1.httpGet)('/getRooms'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], RoomController.prototype, "getRooms", null);
+
+tslib_1.__decorate([(0, inversify_express_utils_1.httpGet)('/setUserInRoom'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], RoomController.prototype, "setUserInRoom", null);
+
+tslib_1.__decorate([(0, inversify_express_utils_1.httpGet)('/joinToRoom'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], RoomController.prototype, "joinToRoom", null);
+
+tslib_1.__decorate([(0, inversify_express_utils_1.httpDelete)('/deleteRoom'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], RoomController.prototype, "deleteRoom", null);
+
+RoomController = tslib_1.__decorate([(0, inversify_express_utils_1.controller)("/api/room", authMiddleware_1.authMiddleWare)], RoomController);
+exports.RoomController = RoomController;
+exports.roomController = new RoomController();
+
+/***/ }),
+/* 39 */
 /***/ (function(module, exports) {
 
 module.exports = require("cors");
