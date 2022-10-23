@@ -3497,9 +3497,6 @@ var WsServer = /*#__PURE__*/function () {
     this.app = app;
     this.server = new ws(app, {// Socket.IO options
       // transports: ["websocket"]
-      //   cors: {
-      //     origin: ["http://localhost:3000", "yoursite.herokuapp.com"],
-      // },
     });
     console.log(this.server); // this.server.on('request', this.app as any)
   }
@@ -3519,7 +3516,7 @@ var WsServer = /*#__PURE__*/function () {
       // });
       this.server.once('connection', /*#__PURE__*/function () {
         var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(socket) {
-          var roomMsg, that;
+          var roomMsg;
           return _regeneratorRuntime().wrap(function _callee2$(_context2) {
             while (1) {
               switch (_context2.prev = _context2.next) {
@@ -3535,10 +3532,9 @@ var WsServer = /*#__PURE__*/function () {
 
                 case 4:
                   roomMsg = _context2.sent;
-                  that = _this;
-                  setInterval(function () {
-                    return that.server.emit("chat:".concat(roomID, ":created"), roomMsg === null || roomMsg === void 0 ? void 0 : roomMsg.toObject().messages);
-                  }, 1000);
+
+                  _this.server.emit("chat:".concat(roomID, ":created"), roomMsg === null || roomMsg === void 0 ? void 0 : roomMsg.toObject().messages);
+
                   socket.on("chat:".concat(roomID), /*#__PURE__*/function () {
                     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(msg) {
                       var newMsg;
@@ -3561,9 +3557,7 @@ var WsServer = /*#__PURE__*/function () {
                               });
 
                             case 3:
-                              setInterval(function () {
-                                return that.server.emit("chat:".concat(roomID), newMsg);
-                              }, 1000);
+                              _this.server.emit("chat:".concat(roomID), newMsg);
 
                             case 4:
                             case "end":
@@ -3578,10 +3572,12 @@ var WsServer = /*#__PURE__*/function () {
                     };
                   }());
                   socket.on('disconnect', function () {
-                    console.log("".concat(userID, " user disconnected")); // this.server.emit(`disconnect:${roomID}`, `${userID} user disconnected`); 
+                    console.log("".concat(userID, " user disconnected"));
+
+                    _this.server.emit("disconnect:".concat(roomID), "".concat(userID, " user disconnected"));
                   });
 
-                case 9:
+                case 8:
                 case "end":
                   return _context2.stop();
               }
