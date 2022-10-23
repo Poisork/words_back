@@ -1186,7 +1186,8 @@ var HttpServer = /*#__PURE__*/function () {
       var build = this.app.build(); // this.app.build.
 
       console.log(6);
-      var app = build.listen("3000" || false);
+      var app = build.listen("3000" || false); // build.on('request', app as any)
+
       console.log("Application listening on port ".concat("3000", "..."));
       this.containerDI.bind(interfaces_1.TYPES.App).toConstantValue(app);
     }
@@ -3494,7 +3495,9 @@ var WsServer = /*#__PURE__*/function () {
     var app = containerDI_1.myContainer.get(interfaces_1.TYPES.App);
     this.app = app;
     this.server = new ws(app, {// Socket.IO options
+      // transports: ["websocket"]
     });
+    console.log(this.server); // this.server.on('request', this.app as any)
   }
 
   _createClass(WsServer, [{
@@ -3517,14 +3520,16 @@ var WsServer = /*#__PURE__*/function () {
             while (1) {
               switch (_context2.prev = _context2.next) {
                 case 0:
+                  // debugger
+                  console.log(socket);
                   console.log("".concat(userID, " user connected")); // const idRoom = ''
 
-                  _context2.next = 3;
+                  _context2.next = 4;
                   return Room_1.Room.findOne({
                     _id: roomID
                   });
 
-                case 3:
+                case 4:
                   roomMsg = _context2.sent;
 
                   _this.server.emit("chat:".concat(roomID, ":created"), roomMsg === null || roomMsg === void 0 ? void 0 : roomMsg.toObject().messages);
@@ -3571,7 +3576,7 @@ var WsServer = /*#__PURE__*/function () {
                     _this.server.emit("disconnect:".concat(roomID), "".concat(userID, " user disconnected"));
                   });
 
-                case 7:
+                case 8:
                 case "end":
                   return _context2.stop();
               }
