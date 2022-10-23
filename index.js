@@ -1186,9 +1186,9 @@ var HttpServer = /*#__PURE__*/function () {
       var build = this.app.build(); // this.app.build.
 
       console.log(6);
-      var app = build.listen("3000" || false); // build.on('request', app as any)
+      var app = build.listen(process.env.PORT || 3000); // build.on('request', app as any)
 
-      console.log("Application listening on port ".concat("3000", "..."));
+      console.log("Application listening on port ".concat(process.env.PORT, "..."));
       this.containerDI.bind(interfaces_1.TYPES.App).toConstantValue(app);
     }
   }]);
