@@ -195,7 +195,6 @@ var ApiError = /*#__PURE__*/function (_Error) {
     _classCallCheck(this, ApiError);
 
     _this = _super.call(this);
-    _this.status = void 0;
     _this.status = status;
     _this.message = message;
     return _this;
@@ -1108,10 +1107,6 @@ var HttpServer = /*#__PURE__*/function () {
 
     _classCallCheck(this, HttpServer);
 
-    this.framework = void 0;
-    this.dataBase = void 0;
-    this.containerDI = void 0;
-    this.app = void 0;
     this.framework = framework;
     this.dataBase = dataBase;
     this.containerDI = containerDI;
@@ -1186,9 +1181,9 @@ var HttpServer = /*#__PURE__*/function () {
       var build = this.app.build(); // this.app.build.
 
       console.log(6);
-      var app = build.listen("3000" || false); // build.on('request', app as any)
+      var app = build.listen(process.env.PORT || false); // build.on('request', app as any)
 
-      console.log("Application listening on port ".concat("3000", "..."));
+      console.log("Application listening on port ".concat(process.env.PORT, "..."));
       this.containerDI.bind(interfaces_1.TYPES.App).toConstantValue(app);
     }
   }]);
@@ -1274,7 +1269,6 @@ var FileController = /*#__PURE__*/function () {
   function FileController(fs) {
     _classCallCheck(this, FileController);
 
-    this.fs = void 0;
     this.fs = fs;
   }
 
@@ -1566,9 +1560,6 @@ var GridFS = /*#__PURE__*/function (_modules_1$FS) {
     _classCallCheck(this, GridFS);
 
     _this = _super.call(this, connection);
-    _this.connection = void 0;
-    _this.fs = void 0;
-    _this.fsBucket = void 0;
     _this.connection = connection;
     connection.once('open', function () {
       _this.fsBucket = new mongoose_1["default"].mongo.GridFSBucket(connection.db, {
@@ -1703,7 +1694,6 @@ var FS = /*#__PURE__*/_createClass( // @inject(TYPES.DbClient) protected abstrac
 function FS(connection) {
   _classCallCheck(this, FS);
 
-  this.connection = void 0;
   this.connection = connection;
 });
 
@@ -3501,9 +3491,6 @@ var WsServer = /*#__PURE__*/function () {
   function WsServer(ws) {
     _classCallCheck(this, WsServer);
 
-    this.ws = void 0;
-    this.server = void 0;
-    this.app = void 0;
     this.ws = ws;
     var app = containerDI_1.myContainer.get(interfaces_1.TYPES.App);
     this.app = app;
