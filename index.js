@@ -680,7 +680,7 @@ function _updateUser() {
 exports.updateUser = updateUser;
 
 function getPuppeteerArgs() {
-  return ['--no-sandbox', '--disable-setuid-sandbox'];
+  return ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--font-render-hinting=none', '--log-level=0', '--aggressive-cache-discard', '--disable-cache', '--disable-application-cache', '--disable-offline-load-stale-cache', '--disk-cache-size=0', '--autoplay-policy=no-user-gesture-required', '--incognito'];
 }
 
 exports.getPuppeteerArgs = getPuppeteerArgs;
@@ -1200,7 +1200,7 @@ var HttpServer = /*#__PURE__*/function () {
       var build = this.app.build(); // this.app.build.
 
       console.log(6);
-      var app = build.listen(process.env.PORT   || false); // build.on('request', app as any)
+      var app = build.listen(process.env.PORT || false); // build.on('request', app as any)
 
       console.log("Application listening on port ".concat(process.env.PORT , "..."));
       this.containerDI.bind(interfaces_1.TYPES.App).toConstantValue(app);
