@@ -1229,7 +1229,7 @@ function ErrorHandleMiddleware(err, _req, res, _next) {
   }
 
   return res.status(500).json({
-    message: "Error!"
+    message: err.message
   });
 }
 
@@ -3918,20 +3918,21 @@ var TranslateController = /*#__PURE__*/function () {
                 return browser.initBrowser();
 
               case 6:
-                _context.next = 8;
+                console.log('inited browser');
+                _context.next = 9;
                 return browser.getWindowData();
 
-              case 8:
+              case 9:
                 data = _context.sent;
                 console.log('after init browser');
                 console.log(data);
-                _context.next = 13;
+                _context.next = 14;
                 return browser.closePage();
 
-              case 13:
+              case 14:
                 return _context.abrupt("return", response.json(data));
 
-              case 14:
+              case 15:
               case "end":
                 return _context.stop();
             }
@@ -4071,11 +4072,12 @@ var Browser = /*#__PURE__*/function () {
               case 6:
                 context = _context3.sent;
                 currentContext = this.url ? context : browser;
+                console.log('create context');
                 this.browser = currentContext;
-                _context3.next = 11;
+                _context3.next = 12;
                 return currentContext.newPage();
 
-              case 11:
+              case 12:
                 this.page = _context3.sent;
                 this.closePage = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
                   return _regeneratorRuntime().wrap(function _callee2$(_context2) {
@@ -4093,7 +4095,7 @@ var Browser = /*#__PURE__*/function () {
                   }, _callee2);
                 }));
 
-              case 13:
+              case 14:
               case "end":
                 return _context3.stop();
             }
