@@ -222,6 +222,7 @@ var ApiError = /*#__PURE__*/function (_Error) {
     _classCallCheck(this, ApiError);
 
     _this = _super.call(this);
+    _this.status = void 0;
     _this.status = status;
     _this.message = message;
     return _this;
@@ -679,7 +680,7 @@ function _updateUser() {
 exports.updateUser = updateUser;
 
 function getPuppeteerArgs() {
-  return ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--font-render-hinting=none', '--log-level=0', '--aggressive-cache-discard', '--disable-cache', '--disable-application-cache', '--disable-offline-load-stale-cache', '--disk-cache-size=0', '--autoplay-policy=no-user-gesture-required', '--incognito'];
+  return ['--no-sandbox', '--disable-setuid-sandbox'];
 }
 
 exports.getPuppeteerArgs = getPuppeteerArgs;
@@ -1121,6 +1122,10 @@ var HttpServer = /*#__PURE__*/function () {
 
     _classCallCheck(this, HttpServer);
 
+    this.framework = void 0;
+    this.dataBase = void 0;
+    this.containerDI = void 0;
+    this.app = void 0;
     this.framework = framework;
     this.dataBase = dataBase;
     this.containerDI = containerDI;
@@ -1195,9 +1200,9 @@ var HttpServer = /*#__PURE__*/function () {
       var build = this.app.build(); // this.app.build.
 
       console.log(6);
-      var app = build.listen(process.env.PORT || false); // build.on('request', app as any)
+      var app = build.listen(process.env.PORT  || false); // build.on('request', app as any)
 
-      console.log("Application listening on port ".concat(process.env.PORT, "..."));
+      console.log("Application listening on port ".concat(process.env.PORT , "..."));
       this.containerDI.bind(interfaces_1.TYPES.App).toConstantValue(app);
     }
   }]);
@@ -1222,14 +1227,16 @@ exports.ErrorHandleMiddleware = void 0;
 var ApiError_1 = __webpack_require__(6);
 
 function ErrorHandleMiddleware(err, _req, res, _next) {
+  var message = err.message || 'Error';
+
   if (err instanceof ApiError_1.ApiError) {
     return res.status(err.status).json({
-      message: err.message
+      message: message
     });
   }
 
   return res.status(500).json({
-    message: err.message
+    message: message
   });
 }
 
@@ -1283,6 +1290,7 @@ var FileController = /*#__PURE__*/function () {
   function FileController(fs) {
     _classCallCheck(this, FileController);
 
+    this.fs = void 0;
     this.fs = fs;
   }
 
@@ -1574,6 +1582,9 @@ var GridFS = /*#__PURE__*/function (_modules_1$FS) {
     _classCallCheck(this, GridFS);
 
     _this = _super.call(this, connection);
+    _this.connection = void 0;
+    _this.fs = void 0;
+    _this.fsBucket = void 0;
     _this.connection = connection;
     connection.once('open', function () {
       _this.fsBucket = new mongoose_1["default"].mongo.GridFSBucket(connection.db, {
@@ -1708,6 +1719,7 @@ var FS = /*#__PURE__*/_createClass( // @inject(TYPES.DbClient) protected abstrac
 function FS(connection) {
   _classCallCheck(this, FS);
 
+  this.connection = void 0;
   this.connection = connection;
 });
 
@@ -3466,6 +3478,8 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -3475,8 +3489,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -3499,8 +3511,10 @@ var WsServer = /*#__PURE__*/function () {
   function WsServer(ws) {
     _classCallCheck(this, WsServer);
 
-    _defineProperty(this, "usersOnline", {});
-
+    this.ws = void 0;
+    this.server = void 0;
+    this.app = void 0;
+    this.usersOnline = {};
     this.ws = ws;
     var app = containerDI_1.myContainer.get(interfaces_1.TYPES.App);
     this.app = app;
@@ -3896,6 +3910,7 @@ var TranslateController = /*#__PURE__*/function () {
   function TranslateController(browser) {
     _classCallCheck(this, TranslateController);
 
+    this.browser = void 0;
     this.browser = browser;
   }
 
@@ -4010,6 +4025,10 @@ var Browser = /*#__PURE__*/function () {
   function Browser(url) {
     _classCallCheck(this, Browser);
 
+    this.url = void 0;
+    this.page = void 0;
+    this.browser = void 0;
+    this.closePage = void 0;
     this.url = url;
   }
 
