@@ -274,34 +274,34 @@ var inversify_1 = __webpack_require__(5);
 var mongoose_1 = tslib_1.__importDefault(__webpack_require__(1)); // import { Server } from "../../server";
 
 
-var fileController_1 = __webpack_require__(20);
+var fileController_1 = __webpack_require__(19);
 
-var gridFS_1 = __webpack_require__(24); // import { FS } from "../controllers/intefaces";
+var gridFS_1 = __webpack_require__(23); // import { FS } from "../controllers/intefaces";
 
 
 var interfaces_1 = __webpack_require__(4);
 
 var inversify_express_utils_1 = __webpack_require__(2);
 
-var authController_1 = __webpack_require__(27);
+var authController_1 = __webpack_require__(26);
 
-var userController_1 = __webpack_require__(29);
+var userController_1 = __webpack_require__(28);
 
-var repetitionController_1 = __webpack_require__(31);
+var repetitionController_1 = __webpack_require__(30);
 
-var dictionariesController_1 = __webpack_require__(33);
+var dictionariesController_1 = __webpack_require__(32);
 
-var friendsController_1 = __webpack_require__(35);
+var friendsController_1 = __webpack_require__(34);
 
-var socket_io_1 = __webpack_require__(36);
+var socket_io_1 = __webpack_require__(35);
 
-var WsServer_1 = __webpack_require__(37);
+var WsServer_1 = __webpack_require__(36);
 
-var roomController_1 = __webpack_require__(38);
+var roomController_1 = __webpack_require__(37);
 
-var translateController_1 = __webpack_require__(39);
+var translateController_1 = __webpack_require__(38);
 
-var Browser_1 = __webpack_require__(40);
+var Browser_1 = __webpack_require__(39);
 
 var myContainer = new inversify_1.Container();
 exports.myContainer = myContainer;
@@ -746,7 +746,7 @@ var tslib_1 = __webpack_require__(0);
 
 var mongoose_1 = __webpack_require__(1);
 
-var bcryptjs_1 = tslib_1.__importDefault(__webpack_require__(28));
+var bcryptjs_1 = tslib_1.__importDefault(__webpack_require__(27));
 
 var jsonwebtoken_1 = tslib_1.__importDefault(__webpack_require__(10)); // import { jwtSecret } from './../../config/default.json'
 
@@ -1011,15 +1011,11 @@ __webpack_require__(12);
 
 var express_1 = tslib_1.__importDefault(__webpack_require__(16));
 
-var ip_1 = tslib_1.__importDefault(__webpack_require__(17));
-
 var mongoose_1 = tslib_1.__importDefault(__webpack_require__(1));
 
-var HttpServer_1 = __webpack_require__(18);
+var HttpServer_1 = __webpack_require__(17);
 
 var containerDI_1 = __webpack_require__(7);
-
-console.log('local ip my computer: ', ip_1["default"].address());
 
 function start() {
   return _start.apply(this, arguments);
@@ -1072,12 +1068,6 @@ module.exports = require("express");
 
 /***/ }),
 /* 17 */
-/***/ (function(module, exports) {
-
-module.exports = require("ip");
-
-/***/ }),
-/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1105,7 +1095,7 @@ exports.HttpServer = void 0;
 var tslib_1 = __webpack_require__(0); // import { router } from "../routes";
 
 
-var errorHandlingMiddleware_1 = __webpack_require__(19); // import { mongoURI, port } from './../../config/default.json'
+var errorHandlingMiddleware_1 = __webpack_require__(18); // import { mongoURI, port } from './../../config/default.json'
 
 
 var interfaces_1 = __webpack_require__(4);
@@ -1114,7 +1104,7 @@ var inversify_express_utils_1 = __webpack_require__(2);
 
 var containerDI_1 = __webpack_require__(7);
 
-var cors_1 = tslib_1.__importDefault(__webpack_require__(42));
+var cors_1 = tslib_1.__importDefault(__webpack_require__(41));
 
 var HttpServer = /*#__PURE__*/function () {
   function HttpServer(framework, dataBase, containerDI) {
@@ -1213,7 +1203,7 @@ var HttpServer = /*#__PURE__*/function () {
 exports.HttpServer = HttpServer;
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1243,7 +1233,7 @@ function ErrorHandleMiddleware(err, _req, res, _next) {
 exports.ErrorHandleMiddleware = ErrorHandleMiddleware;
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1283,7 +1273,7 @@ var inversify_express_utils_1 = __webpack_require__(2);
 
 var authMiddleware_1 = __webpack_require__(3);
 
-var file_1 = __webpack_require__(21); // @injectable()
+var file_1 = __webpack_require__(20); // @injectable()
 
 
 var FileController = /*#__PURE__*/function () {
@@ -1444,7 +1434,7 @@ exports.FileController = FileController; // export const fileController = new Fi
 // export const fileController = container.registerSingleton<FileController>()
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1457,9 +1447,9 @@ exports.upload = void 0;
 
 var tslib_1 = __webpack_require__(0);
 
-var multer_1 = tslib_1.__importDefault(__webpack_require__(22));
+var multer_1 = tslib_1.__importDefault(__webpack_require__(21));
 
-var multer_gridfs_storage_1 = __webpack_require__(23); // const conn = mongoose.createConnection(mongoURI);
+var multer_gridfs_storage_1 = __webpack_require__(22); // const conn = mongoose.createConnection(mongoURI);
 // const conn = mongoose.connection;
 // //Init gfs 
 // let gfs; 
@@ -1510,19 +1500,19 @@ exports.upload = (0, multer_1["default"])({
 });
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports) {
 
 module.exports = require("multer");
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports) {
 
 module.exports = require("multer-gridfs-storage");
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1565,9 +1555,9 @@ var tslib_1 = __webpack_require__(0);
 
 var mongoose_1 = tslib_1.__importDefault(__webpack_require__(1));
 
-var gridfs_stream_1 = tslib_1.__importDefault(__webpack_require__(25));
+var gridfs_stream_1 = tslib_1.__importDefault(__webpack_require__(24));
 
-var modules_1 = __webpack_require__(26); // @injectable()
+var modules_1 = __webpack_require__(25); // @injectable()
 
 
 var GridFS = /*#__PURE__*/function (_modules_1$FS) {
@@ -1686,13 +1676,13 @@ exports.GridFS = GridFS; // const c = new GridFS(new mongoose.Connection)
 // export const gridFs = new GridFS(mongoose.connection)
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = require("gridfs-stream");
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1727,7 +1717,7 @@ FS = tslib_1.__decorate([(0, inversify_1.injectable)(), tslib_1.__param(0, (0, i
 exports.FS = FS;
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2015,13 +2005,13 @@ exports.AuthController = AuthController;
 exports.authController = new AuthController();
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports) {
 
 module.exports = require("bcryptjs");
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2064,7 +2054,7 @@ var authMiddleware_1 = __webpack_require__(3);
 
 var Friend_1 = __webpack_require__(13);
 
-var friends_1 = __webpack_require__(30);
+var friends_1 = __webpack_require__(29);
 
 var UserController = /*#__PURE__*/function () {
   function UserController() {
@@ -2343,7 +2333,7 @@ exports.UserController = UserController; // async function toBuffer (avatar: str
 exports.userController = new UserController();
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2409,7 +2399,7 @@ function _findFriends() {
 exports.findFriends = findFriends;
 
 /***/ }),
-/* 31 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2440,7 +2430,7 @@ var inversify_express_utils_1 = __webpack_require__(2);
 
 var authMiddleware_1 = __webpack_require__(3);
 
-var Repetitions_1 = __webpack_require__(32);
+var Repetitions_1 = __webpack_require__(31);
 
 var base_1 = __webpack_require__(8);
 
@@ -2558,7 +2548,7 @@ exports.RepetitionController = RepetitionController;
 exports.repetitionController = new RepetitionController();
 
 /***/ }),
-/* 32 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2637,7 +2627,7 @@ exports.repetitionSchema = new mongoose_1.Schema({
 exports.Repetition = (0, mongoose_1.model)('Repetition', exports.repetitionSchema);
 
 /***/ }),
-/* 33 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2668,7 +2658,7 @@ var inversify_express_utils_1 = __webpack_require__(2);
 
 var authMiddleware_1 = __webpack_require__(3);
 
-var Dictionary_1 = __webpack_require__(34);
+var Dictionary_1 = __webpack_require__(33);
 
 var base_1 = __webpack_require__(8);
 
@@ -3138,7 +3128,7 @@ exports.DictionariesController = DictionariesController;
 exports.dictionariesController = new DictionariesController();
 
 /***/ }),
-/* 34 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3200,7 +3190,7 @@ exports.TranslatedDictionary = (0, mongoose_1.model)('TranslatedDictionary', exp
 exports.StaticTranslatedDictionary = (0, mongoose_1.model)('StaticTranslatedDictionary', exports.dictionarySchema);
 
 /***/ }),
-/* 35 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3458,13 +3448,13 @@ exports.FriendsController = FriendsController;
 exports.friendsController = new FriendsController();
 
 /***/ }),
-/* 36 */
+/* 35 */
 /***/ (function(module, exports) {
 
 module.exports = require("socket.io");
 
 /***/ }),
-/* 37 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3633,7 +3623,7 @@ WsServer = tslib_1.__decorate([(0, inversify_1.injectable)(), tslib_1.__param(0,
 exports.WsServer = WsServer;
 
 /***/ }),
-/* 38 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3871,7 +3861,7 @@ exports.RoomController = RoomController;
 exports.roomController = new RoomController();
 
 /***/ }),
-/* 39 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3972,7 +3962,7 @@ TranslateController = tslib_1.__decorate([(0, inversify_express_utils_1.controll
 exports.TranslateController = TranslateController; // export const roomController = new RoomController()
 
 /***/ }),
-/* 40 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4017,7 +4007,7 @@ exports.Browser = void 0;
 
 var tslib_1 = __webpack_require__(0);
 
-var puppeteer_1 = tslib_1.__importDefault(__webpack_require__(41));
+var puppeteer_1 = tslib_1.__importDefault(__webpack_require__(40));
 
 var base_1 = __webpack_require__(8);
 
@@ -4235,13 +4225,13 @@ exports.Browser = Browser; // (async () => {
 // })();
 
 /***/ }),
-/* 41 */
+/* 40 */
 /***/ (function(module, exports) {
 
 module.exports = require("puppeteer");
 
 /***/ }),
-/* 42 */
+/* 41 */
 /***/ (function(module, exports) {
 
 module.exports = require("cors");
