@@ -680,7 +680,7 @@ function _updateUser() {
 exports.updateUser = updateUser;
 
 function getPuppeteerArgs() {
-  return ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--font-render-hinting=none', '--log-level=0', '--aggressive-cache-discard', '--disable-cache', '--disable-application-cache', '--disable-offline-load-stale-cache', '--disk-cache-size=0', '--autoplay-policy=no-user-gesture-required', '--incognito'];
+  return ["--no-sandbox", "--disable-setuid-sandbox"];
 }
 
 exports.getPuppeteerArgs = getPuppeteerArgs;
@@ -1202,7 +1202,7 @@ var HttpServer = /*#__PURE__*/function () {
       console.log(6);
       var app = build.listen(process.env.PORT || false); // build.on('request', app as any)
 
-      console.log("Application listening on port ".concat(process.env.PORT , "..."));
+      console.log("Application listening on port ".concat(process.env.PORT, "..."));
       this.containerDI.bind(interfaces_1.TYPES.App).toConstantValue(app);
     }
   }]);
@@ -4044,19 +4044,17 @@ var Browser = /*#__PURE__*/function () {
                 return this.createBrowser();
 
               case 2:
-                _context.t0 = Promise;
+                console.log('created browser');
                 _context.next = 5;
                 return this.page["goto"](this.url, {
                   waitUntil: 'networkidle2'
                 });
 
               case 5:
-                _context.t1 = _context.sent;
-                _context.t2 = [_context.t1];
+                console.log('go to'); // this.page.waitForSelector('.translation'),
+                // await this.page.waitForNavigation()
 
-                _context.t0.all.call(_context.t0, _context.t2);
-
-              case 8:
+              case 6:
               case "end":
                 return _context.stop();
             }
@@ -4074,7 +4072,7 @@ var Browser = /*#__PURE__*/function () {
     key: "createBrowser",
     value: function () {
       var _createBrowser = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-        var puppeteerNode, browser, context, currentContext;
+        var puppeteerNode, browser;
         return _regeneratorRuntime().wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
@@ -4085,18 +4083,14 @@ var Browser = /*#__PURE__*/function () {
 
               case 3:
                 browser = _context3.sent;
-                _context3.next = 6;
-                return browser.createIncognitoBrowserContext();
-
-              case 6:
-                context = _context3.sent;
-                currentContext = this.url ? context : browser;
+                // const context = await browser.createIncognitoBrowserContext();
+                // const currentContext = this.url ? context : browser;
                 console.log('create context');
-                this.browser = currentContext;
-                _context3.next = 12;
-                return currentContext.newPage();
+                this.browser = browser;
+                _context3.next = 8;
+                return browser.newPage();
 
-              case 12:
+              case 8:
                 this.page = _context3.sent;
                 this.closePage = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
                   return _regeneratorRuntime().wrap(function _callee2$(_context2) {
@@ -4114,7 +4108,7 @@ var Browser = /*#__PURE__*/function () {
                   }, _callee2);
                 }));
 
-              case 14:
+              case 10:
               case "end":
                 return _context3.stop();
             }
@@ -4130,33 +4124,49 @@ var Browser = /*#__PURE__*/function () {
     }()
   }, {
     key: "getBrowserInstance",
-    value: function getBrowserInstance(puppeteer) {
-      var rendererOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      // if (browserURL) {
-      //   return puppeteer.connect({
-      //     browserURL,
-      //   });
-      // }
-      return puppeteer.launch(_objectSpread({
-        args: (0, base_1.getPuppeteerArgs)()
-      }, rendererOptions));
-    }
+    value: function () {
+      var _getBrowserInstance = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(puppeteer) {
+        var rendererOptions,
+            _args4 = arguments;
+        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                rendererOptions = _args4.length > 1 && _args4[1] !== undefined ? _args4[1] : {};
+                return _context4.abrupt("return", puppeteer.launch(_objectSpread({
+                  args: (0, base_1.getPuppeteerArgs)()
+                }, rendererOptions)));
+
+              case 2:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }));
+
+      function getBrowserInstance(_x) {
+        return _getBrowserInstance.apply(this, arguments);
+      }
+
+      return getBrowserInstance;
+    }()
   }, {
     key: "getWindowData",
     value: function () {
-      var _getWindowData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+      var _getWindowData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
         var windowData;
-        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
-                _context5.next = 2;
-                return this.page.evaluate( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-                  return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+                _context6.next = 2;
+                return this.page.evaluate( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+                  return _regeneratorRuntime().wrap(function _callee5$(_context5) {
                     while (1) {
-                      switch (_context4.prev = _context4.next) {
+                      switch (_context5.prev = _context5.next) {
                         case 0:
-                          return _context4.abrupt("return", _toConsumableArray(window.document.querySelectorAll('.translation')).filter(function (el) {
+                          return _context5.abrupt("return", _toConsumableArray(window.document.querySelectorAll('.translation')).filter(function (el) {
                             return el.title;
                           }).map(function (elem) {
                             var titleDOM = new DOMParser().parseFromString(elem.title, "text/html").querySelector('.nobold');
@@ -4185,22 +4195,22 @@ var Browser = /*#__PURE__*/function () {
 
                         case 1:
                         case "end":
-                          return _context4.stop();
+                          return _context5.stop();
                       }
                     }
-                  }, _callee4);
+                  }, _callee5);
                 })));
 
               case 2:
-                windowData = _context5.sent;
-                return _context5.abrupt("return", windowData);
+                windowData = _context6.sent;
+                return _context6.abrupt("return", windowData);
 
               case 4:
               case "end":
-                return _context5.stop();
+                return _context6.stop();
             }
           }
-        }, _callee5, this);
+        }, _callee6, this);
       }));
 
       function getWindowData() {
