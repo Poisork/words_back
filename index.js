@@ -302,7 +302,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getPuppeteerArgs = exports.updateUser = exports.setDocument = exports.getDataDocument = exports.patchDocument = exports.responseAllCollection = exports.deleteDocument = exports.parseDocument = exports.parseDictionaryCollection = void 0;
+exports.getPuppeteerArgs = exports.updateFriend = exports.updateUser = exports.setDocument = exports.getDataDocument = exports.patchDocument = exports.responseFriendAllCollection = exports.responseAllCollection = exports.deleteDocument = exports.parseDocument = exports.parseDictionaryCollection = void 0;
 var tslib_1 = __webpack_require__(0);
 var mongoose_1 = tslib_1.__importDefault(__webpack_require__(1));
 function parseDictionaryCollection(dictionary) {
@@ -329,31 +329,31 @@ function deleteDocument(_x, _x2, _x3, _x4) {
   return _deleteDocument.apply(this, arguments);
 }
 function _deleteDocument() {
-  _deleteDocument = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(Model, id, response, user) {
+  _deleteDocument = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(Model, id, response, user) {
     var doc;
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) {
-        switch (_context2.prev = _context2.next) {
+        switch (_context3.prev = _context3.next) {
           case 0:
-            _context2.prev = 0;
-            _context2.next = 3;
+            _context3.prev = 0;
+            _context3.next = 3;
             return Model.findOneAndRemove({
               _id: id,
               user: user
             });
           case 3:
-            doc = _context2.sent;
-            return _context2.abrupt("return", response.send(parseDocument(doc)));
+            doc = _context3.sent;
+            return _context3.abrupt("return", response.send(parseDocument(doc)));
           case 7:
-            _context2.prev = 7;
-            _context2.t0 = _context2["catch"](0);
-            return _context2.abrupt("return", console.log(_context2.t0));
+            _context3.prev = 7;
+            _context3.t0 = _context3["catch"](0);
+            return _context3.abrupt("return", console.log(_context3.t0));
           case 10:
           case "end":
-            return _context2.stop();
+            return _context3.stop();
         }
       }
-    }, _callee2, null, [[0, 7]]);
+    }, _callee3, null, [[0, 7]]);
   }));
   return _deleteDocument.apply(this, arguments);
 }
@@ -374,61 +374,119 @@ var responseAllCollection = /*#__PURE__*/function () {
             repetition = _args.length > 3 && _args[3] !== undefined ? _args[3] : false;
             idUser = request._user.idUser;
             _request$query = request.query, language = _request$query.language, translatedLanguage = _request$query.translatedLanguage;
-            _context.prev = 3;
-            if (!repetition) {
-              _context.next = 10;
-              break;
-            }
-            _context.next = 7;
-            return Model.find({
-              user: idUser,
-              'value.language': [language, translatedLanguage],
-              'value.translatedTo': [language, translatedLanguage]
-            });
-          case 7:
+            _context.next = 5;
+            return getAllWordsCollection(Model, idUser, language, translatedLanguage, repetition);
+          case 5:
             collection = _context.sent;
-            _context.next = 13;
-            break;
-          case 10:
-            _context.next = 12;
-            return Model.find({
-              user: idUser,
-              'value.language': language,
-              'value.translatedTo': translatedLanguage
-            });
-          case 12:
-            collection = _context.sent;
-          case 13:
             return _context.abrupt("return", response.send(parseDictionaryCollection(collection)));
-          case 16:
-            _context.prev = 16;
-            _context.t0 = _context["catch"](3);
-            return _context.abrupt("return", console.log(_context.t0));
-          case 19:
+          case 7:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[3, 16]]);
+    }, _callee);
   }));
   return function responseAllCollection(_x5, _x6, _x7) {
     return _ref.apply(this, arguments);
   };
 }();
 exports.responseAllCollection = responseAllCollection;
-function patchDocument(_x8, _x9, _x10, _x11, _x12) {
+var responseFriendAllCollection = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(Model, response, request) {
+    var repetition,
+      _request$query2,
+      language,
+      translatedLanguage,
+      friendId,
+      collection,
+      _args2 = arguments;
+    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            repetition = _args2.length > 3 && _args2[3] !== undefined ? _args2[3] : false;
+            // const { idUser } = request._user;
+            _request$query2 = request.query, language = _request$query2.language, translatedLanguage = _request$query2.translatedLanguage, friendId = _request$query2.friendId;
+            _context2.next = 4;
+            return getAllWordsCollection(Model, friendId, language, translatedLanguage, repetition);
+          case 4:
+            collection = _context2.sent;
+            return _context2.abrupt("return", response.send(parseDictionaryCollection(collection)));
+          case 6:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return function responseFriendAllCollection(_x8, _x9, _x10) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+exports.responseFriendAllCollection = responseFriendAllCollection;
+function getAllWordsCollection(_x11, _x12, _x13, _x14, _x15) {
+  return _getAllWordsCollection.apply(this, arguments);
+}
+function _getAllWordsCollection() {
+  _getAllWordsCollection = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(Model, id, language, translatedLanguage, repetition) {
+    var collection;
+    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            _context4.prev = 0;
+            if (!repetition) {
+              _context4.next = 7;
+              break;
+            }
+            _context4.next = 4;
+            return Model.find({
+              user: id,
+              'value.language': [language, translatedLanguage],
+              'value.translatedTo': [language, translatedLanguage]
+            });
+          case 4:
+            collection = _context4.sent;
+            _context4.next = 10;
+            break;
+          case 7:
+            _context4.next = 9;
+            return Model.find({
+              user: id,
+              'value.language': language,
+              'value.translatedTo': translatedLanguage
+            });
+          case 9:
+            collection = _context4.sent;
+          case 10:
+            return _context4.abrupt("return", collection);
+          case 13:
+            _context4.prev = 13;
+            _context4.t0 = _context4["catch"](0);
+            console.log(_context4.t0);
+            return _context4.abrupt("return", _context4.t0);
+          case 17:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4, null, [[0, 13]]);
+  }));
+  return _getAllWordsCollection.apply(this, arguments);
+}
+function patchDocument(_x16, _x17, _x18, _x19, _x20) {
   return _patchDocument.apply(this, arguments);
 }
 function _patchDocument() {
-  _patchDocument = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(Model, id, oldValue, request, response) {
+  _patchDocument = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(Model, id, oldValue, request, response) {
     var idUser, res;
-    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context5.prev = _context5.next) {
           case 0:
             idUser = request._user.idUser;
-            _context3.prev = 1;
-            _context3.next = 4;
+            _context5.prev = 1;
+            _context5.next = 4;
             return Model.findOneAndUpdate({
               _id: id,
               user: idUser
@@ -438,129 +496,47 @@ function _patchDocument() {
               "new": true
             });
           case 4:
-            res = _context3.sent;
-            return _context3.abrupt("return", response.send(parseDocument(res)));
+            res = _context5.sent;
+            return _context5.abrupt("return", response.send(parseDocument(res)));
           case 8:
-            _context3.prev = 8;
-            _context3.t0 = _context3["catch"](1);
-            return _context3.abrupt("return", console.log(_context3.t0));
-          case 11:
+            _context5.prev = 8;
+            _context5.t0 = _context5["catch"](1);
+            console.log(_context5.t0);
+            return _context5.abrupt("return", _context5.t0);
+          case 12:
           case "end":
-            return _context3.stop();
+            return _context5.stop();
         }
       }
-    }, _callee3, null, [[1, 8]]);
+    }, _callee5, null, [[1, 8]]);
   }));
   return _patchDocument.apply(this, arguments);
 }
 exports.patchDocument = patchDocument;
-function getDataDocument(_x13, _x14) {
+function getDataDocument(_x21, _x22) {
   return _getDataDocument.apply(this, arguments);
 }
 function _getDataDocument() {
-  _getDataDocument = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(request, Model) {
+  _getDataDocument = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(request, Model) {
     var id, idUser, oldWord, oldValue;
-    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
       while (1) {
-        switch (_context4.prev = _context4.next) {
+        switch (_context6.prev = _context6.next) {
           case 0:
             id = request.params.id;
             idUser = request._user.idUser;
-            _context4.next = 4;
+            _context6.next = 4;
             return Model.findOne({
               _id: id,
               user: idUser
             });
           case 4:
-            oldWord = _context4.sent;
+            oldWord = _context6.sent;
             oldValue = (oldWord === null || oldWord === void 0 ? void 0 : oldWord.toObject().value) || {};
-            return _context4.abrupt("return", {
+            return _context6.abrupt("return", {
               id: id,
               oldValue: oldValue
             });
-          case 7:
-          case "end":
-            return _context4.stop();
-        }
-      }
-    }, _callee4);
-  }));
-  return _getDataDocument.apply(this, arguments);
-}
-exports.getDataDocument = getDataDocument;
-function setDocument(_x15, _x16, _x17) {
-  return _setDocument.apply(this, arguments);
-}
-function _setDocument() {
-  _setDocument = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(Model, request, response) {
-    var idUser, documentAlreadyExist, document;
-    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-      while (1) {
-        switch (_context5.prev = _context5.next) {
-          case 0:
-            idUser = request._user.idUser;
-            _context5.next = 3;
-            return Model.findOne({
-              key: request.body.word,
-              user: idUser
-            });
-          case 3:
-            documentAlreadyExist = _context5.sent;
-            if (!documentAlreadyExist) {
-              _context5.next = 6;
-              break;
-            }
-            return _context5.abrupt("return", response.status(404).send());
-          case 6:
-            document = new Model({
-              key: request.body.word,
-              value: request.body,
-              user: new mongoose_1["default"].Types.ObjectId(idUser)
-            });
-            _context5.prev = 7;
-            _context5.next = 10;
-            return document.save();
-          case 10:
-            return _context5.abrupt("return", response.send(parseDocument(document)));
-          case 13:
-            _context5.prev = 13;
-            _context5.t0 = _context5["catch"](7);
-            return _context5.abrupt("return", console.log(_context5.t0));
-          case 16:
-          case "end":
-            return _context5.stop();
-        }
-      }
-    }, _callee5, null, [[7, 13]]);
-  }));
-  return _setDocument.apply(this, arguments);
-}
-exports.setDocument = setDocument;
-function updateUser(_x18, _x19, _x20) {
-  return _updateUser.apply(this, arguments);
-}
-function _updateUser() {
-  _updateUser = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(request, Model, updatedField) {
-    var idUser, userModel;
-    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-      while (1) {
-        switch (_context6.prev = _context6.next) {
-          case 0:
-            idUser = request._user.idUser;
-            _context6.next = 3;
-            return Model.findOne({
-              _id: idUser
-            });
-          case 3:
-            userModel = _context6.sent;
-            _context6.next = 6;
-            return Model.findOneAndUpdate({
-              _id: idUser
-            }, _objectSpread(_objectSpread({}, userModel === null || userModel === void 0 ? void 0 : userModel.toObject()), updatedField), {
-              "new": true
-            });
-          case 6:
-            return _context6.abrupt("return", _context6.sent);
           case 7:
           case "end":
             return _context6.stop();
@@ -568,9 +544,127 @@ function _updateUser() {
       }
     }, _callee6);
   }));
+  return _getDataDocument.apply(this, arguments);
+}
+exports.getDataDocument = getDataDocument;
+function setDocument(_x23, _x24, _x25, _x26) {
+  return _setDocument.apply(this, arguments);
+}
+function _setDocument() {
+  _setDocument = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(Model, request, response, idUser) {
+    var documentAlreadyExist, document;
+    return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+      while (1) {
+        switch (_context7.prev = _context7.next) {
+          case 0:
+            _context7.next = 2;
+            return Model.findOne({
+              key: request.body.word,
+              user: idUser
+            });
+          case 2:
+            documentAlreadyExist = _context7.sent;
+            if (!documentAlreadyExist) {
+              _context7.next = 5;
+              break;
+            }
+            return _context7.abrupt("return", response.status(404).send());
+          case 5:
+            document = new Model({
+              key: request.body.word,
+              value: request.body,
+              user: new mongoose_1["default"].Types.ObjectId(idUser)
+            });
+            _context7.prev = 6;
+            _context7.next = 9;
+            return document.save();
+          case 9:
+            return _context7.abrupt("return", response.send(parseDocument(document)));
+          case 12:
+            _context7.prev = 12;
+            _context7.t0 = _context7["catch"](6);
+            return _context7.abrupt("return", console.log(_context7.t0));
+          case 15:
+          case "end":
+            return _context7.stop();
+        }
+      }
+    }, _callee7, null, [[6, 12]]);
+  }));
+  return _setDocument.apply(this, arguments);
+}
+exports.setDocument = setDocument;
+// refactor change type updateField params
+function updateUser(_x27, _x28, _x29) {
+  return _updateUser.apply(this, arguments);
+}
+function _updateUser() {
+  _updateUser = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(request, Model, updatedField) {
+    var idUser, userModel;
+    return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+      while (1) {
+        switch (_context8.prev = _context8.next) {
+          case 0:
+            debugger;
+            idUser = request._user.idUser;
+            _context8.next = 4;
+            return Model.findOne({
+              _id: idUser
+            });
+          case 4:
+            userModel = _context8.sent;
+            _context8.next = 7;
+            return Model.findOneAndUpdate({
+              _id: idUser
+            }, _objectSpread(_objectSpread({}, userModel === null || userModel === void 0 ? void 0 : userModel.toObject()), updatedField), {
+              "new": true
+            });
+          case 7:
+            return _context8.abrupt("return", _context8.sent);
+          case 8:
+          case "end":
+            return _context8.stop();
+        }
+      }
+    }, _callee8);
+  }));
   return _updateUser.apply(this, arguments);
 }
 exports.updateUser = updateUser;
+function updateFriend(_x30, _x31, _x32) {
+  return _updateFriend.apply(this, arguments);
+}
+function _updateFriend() {
+  _updateFriend = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(Model, updatedField, idFriend) {
+    var userModel;
+    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+      while (1) {
+        switch (_context9.prev = _context9.next) {
+          case 0:
+            _context9.next = 2;
+            return Model.findOne({
+              _id: idFriend
+            });
+          case 2:
+            userModel = _context9.sent;
+            _context9.next = 5;
+            return Model.findOneAndUpdate({
+              _id: idFriend
+            }, _objectSpread(_objectSpread({}, userModel === null || userModel === void 0 ? void 0 : userModel.toObject()), updatedField), {
+              "new": true
+            });
+          case 5:
+            return _context9.abrupt("return", _context9.sent);
+          case 6:
+          case "end":
+            return _context9.stop();
+        }
+      }
+    }, _callee9);
+  }));
+  return _updateFriend.apply(this, arguments);
+}
+exports.updateFriend = updateFriend;
 function getPuppeteerArgs() {
   return ["--no-sandbox", "--disable-setuid-sandbox"];
 }
@@ -683,6 +777,20 @@ exports.userSchema = new mongoose_1.Schema({
   friends: [{
     type: mongoose_1.Schema.Types.ObjectId,
     ref: 'Friends'
+  }],
+  score: {
+    type: Number,
+    "default": 0
+  },
+  historyScore: [{
+    date: Date,
+    word: String,
+    value: Number,
+    actionType: String,
+    actionOwner: {
+      type: mongoose_1.Schema.Types.ObjectId,
+      ref: 'User'
+    }
   }]
 }, {
   timestamps: true
@@ -767,7 +875,8 @@ exports.userSchema.methods.toAuthJSON = function (oldToken) {
     avatar = this.avatar,
     profilePicture = this.profilePicture,
     language = this.language,
-    translatedLanguage = this.translatedLanguage;
+    translatedLanguage = this.translatedLanguage,
+    score = this.score;
   var token = oldToken || this.generateJWT();
   return {
     username: username,
@@ -779,7 +888,8 @@ exports.userSchema.methods.toAuthJSON = function (oldToken) {
     refreshToken: this.generateJWRT(token),
     idUser: _id,
     language: language,
-    translatedLanguage: translatedLanguage
+    translatedLanguage: translatedLanguage,
+    score: score
   };
 };
 exports.User = (0, mongoose_1.model)('User', exports.userSchema);
@@ -1023,9 +1133,9 @@ var HttpServer = /*#__PURE__*/function () {
       var build = this.app.build();
       // this.app.build.
       console.log(6);
-      var app = build.listen(process.env.PORT || false);
+      var app = build.listen(process.env.PORT  || false);
       // build.on('request', app as any)
-      console.log("Application listening on port ".concat(process.env.PORT, "..."));
+      console.log("Application listening on port ".concat(process.env.PORT , "..."));
       this.containerDI.bind(interfaces_1.TYPES.App).toConstantValue(app);
     }
   }]);
@@ -1558,7 +1668,8 @@ var AuthController = /*#__PURE__*/function () {
                   username: username,
                   email: email,
                   language: 'en',
-                  translatedLanguage: 'ua'
+                  translatedLanguage: 'ua',
+                  score: 0
                 });
                 _context2.next = 9;
                 return user.setPassword(password);
@@ -1893,7 +2004,9 @@ var UserController = /*#__PURE__*/function () {
                 return (0, base_1.updateUser)(request, User_1.User, updatedField);
               case 4:
                 data = _context6.sent;
-                return _context6.abrupt("return", response.status(204).send(data === null || data === void 0 ? void 0 : data.toObject().language));
+                return _context6.abrupt("return", response.status(204).send({
+                  language: data === null || data === void 0 ? void 0 : data.toObject().language
+                }));
               case 6:
               case "end":
                 return _context6.stop();
@@ -1923,7 +2036,9 @@ var UserController = /*#__PURE__*/function () {
                 return (0, base_1.updateUser)(request, User_1.User, updatedField);
               case 4:
                 data = _context7.sent;
-                return _context7.abrupt("return", response.status(204).send(data === null || data === void 0 ? void 0 : data.toObject().translatedLanguage));
+                return _context7.abrupt("return", response.status(204).send({
+                  translatedLanguage: data === null || data === void 0 ? void 0 : data.toObject().translatedLanguage
+                }));
               case 6:
               case "end":
                 return _context7.stop();
@@ -1936,6 +2051,97 @@ var UserController = /*#__PURE__*/function () {
       }
       return patchTranslatedLanguage;
     }()
+  }, {
+    key: "patchUserScore",
+    value: function () {
+      var _patchUserScore = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(request, response) {
+        var idUser, _request$body, score, word, actionType, userModel, historyScore, updatedFields;
+        return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                idUser = request._user.idUser;
+                _request$body = request.body, score = _request$body.score, word = _request$body.word, actionType = _request$body.actionType;
+                debugger;
+                _context8.next = 5;
+                return User_1.User.findOne({
+                  _id: idUser
+                });
+              case 5:
+                userModel = _context8.sent;
+                historyScore = {
+                  date: new Date(),
+                  word: word,
+                  value: score,
+                  actionType: actionType,
+                  actionOwner: idUser
+                };
+                updatedFields = {
+                  score: userModel.toObject().score + score,
+                  historyScore: userModel.toObject().historyScore.concat(historyScore)
+                };
+                _context8.next = 10;
+                return (0, base_1.updateUser)(request, User_1.User, updatedFields);
+              case 10:
+                return _context8.abrupt("return", response.send({
+                  score: updatedFields.score
+                }));
+              case 11:
+              case "end":
+                return _context8.stop();
+            }
+          }
+        }, _callee8);
+      }));
+      function patchUserScore(_x15, _x16) {
+        return _patchUserScore.apply(this, arguments);
+      }
+      return patchUserScore;
+    }()
+  }, {
+    key: "patchFriendScore",
+    value: function () {
+      var _patchFriendScore = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(request, response) {
+        var _request$body2, score, friendId, word, actionType, userModel, historyScore, updatedFields;
+        return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+          while (1) {
+            switch (_context9.prev = _context9.next) {
+              case 0:
+                _request$body2 = request.body, score = _request$body2.score, friendId = _request$body2.friendId, word = _request$body2.word, actionType = _request$body2.actionType;
+                _context9.next = 3;
+                return User_1.User.findOne({
+                  _id: friendId
+                });
+              case 3:
+                userModel = _context9.sent;
+                historyScore = {
+                  date: new Date(),
+                  word: word,
+                  value: score,
+                  actionType: actionType,
+                  actionOwner: friendId
+                };
+                updatedFields = {
+                  score: userModel.toObject().score + score,
+                  historyScore: userModel.toObject().historyScore.concat(historyScore)
+                };
+                debugger;
+                _context9.next = 9;
+                return (0, base_1.updateFriend)(User_1.User, updatedFields, friendId);
+              case 9:
+                return _context9.abrupt("return", response.status(204).send());
+              case 10:
+              case "end":
+                return _context9.stop();
+            }
+          }
+        }, _callee9);
+      }));
+      function patchFriendScore(_x17, _x18) {
+        return _patchFriendScore.apply(this, arguments);
+      }
+      return patchFriendScore;
+    }()
   }]);
   return UserController;
 }();
@@ -1946,10 +2152,10 @@ tslib_1.__decorate([(0, inversify_express_utils_1.httpPatch)('/patchAvatar'), ts
 tslib_1.__decorate([(0, inversify_express_utils_1.httpPatch)('/patchProfilePicture'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], UserController.prototype, "patchProfilePicture", null);
 tslib_1.__decorate([(0, inversify_express_utils_1.httpPatch)('/patchTranslatedLanguage'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], UserController.prototype, "patchLanguage", null);
 tslib_1.__decorate([(0, inversify_express_utils_1.httpPatch)('/patchLanguage'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], UserController.prototype, "patchTranslatedLanguage", null);
+tslib_1.__decorate([(0, inversify_express_utils_1.httpPatch)('/patchUserScore'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], UserController.prototype, "patchUserScore", null);
+tslib_1.__decorate([(0, inversify_express_utils_1.httpPatch)('/patchFriendScore'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], UserController.prototype, "patchFriendScore", null);
 UserController = tslib_1.__decorate([(0, inversify_express_utils_1.controller)("/api/user", authMiddleware_1.authMiddleWare)], UserController);
 exports.UserController = UserController;
-// async function toBuffer (avatar: string)  {
-//  } 
 exports.userController = new UserController();
 
 /***/ }),
@@ -2025,7 +2231,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.repetitionController = exports.RepetitionController = void 0;
+exports.RepetitionController = void 0;
 var tslib_1 = __webpack_require__(0);
 var inversify_express_utils_1 = __webpack_require__(2);
 var authMiddleware_1 = __webpack_require__(3);
@@ -2094,15 +2300,17 @@ var RepetitionController = /*#__PURE__*/function () {
     key: "setRepetition",
     value: function () {
       var _setRepetition = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(request, response) {
+        var idUser;
         return _regeneratorRuntime().wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _context3.next = 2;
-                return (0, base_1.setDocument)(Repetitions_1.Repetition, request, response);
-              case 2:
-                return _context3.abrupt("return", _context3.sent);
+                idUser = request._user.idUser;
+                _context3.next = 3;
+                return (0, base_1.setDocument)(Repetitions_1.Repetition, request, response, idUser);
               case 3:
+                return _context3.abrupt("return", _context3.sent);
+              case 4:
               case "end":
                 return _context3.stop();
             }
@@ -2114,15 +2322,44 @@ var RepetitionController = /*#__PURE__*/function () {
       }
       return setRepetition;
     }()
+  }, {
+    key: "removeAllWords",
+    value: function () {
+      var _removeAllWords = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(request, response) {
+        var idUser;
+        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                idUser = request._user.idUser;
+                _context4.next = 3;
+                return Repetitions_1.Repetition.find({
+                  user: idUser
+                }).deleteMany();
+              case 3:
+                return _context4.abrupt("return", response.send());
+              case 4:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }));
+      function removeAllWords(_x7, _x8) {
+        return _removeAllWords.apply(this, arguments);
+      }
+      return removeAllWords;
+    }()
   }]);
   return RepetitionController;
 }();
 tslib_1.__decorate([(0, inversify_express_utils_1.httpGet)('/repetitions'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], RepetitionController.prototype, "getRepetitions", null);
 tslib_1.__decorate([(0, inversify_express_utils_1.httpPatch)('/patchRepetition/:id'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], RepetitionController.prototype, "patchRepetition", null);
 tslib_1.__decorate([(0, inversify_express_utils_1.httpPost)('/setRepetition'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], RepetitionController.prototype, "setRepetition", null);
+tslib_1.__decorate([(0, inversify_express_utils_1.httpDelete)('/removeAllRepetition'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], RepetitionController.prototype, "removeAllWords", null);
 RepetitionController = tslib_1.__decorate([(0, inversify_express_utils_1.controller)('/api/repetitions', authMiddleware_1.authMiddleWare)], RepetitionController);
 exports.RepetitionController = RepetitionController;
-exports.repetitionController = new RepetitionController();
+// export const repetitionController = new RepetitionController()
 
 /***/ }),
 /* 31 */
@@ -2218,7 +2455,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.dictionariesController = exports.DictionariesController = void 0;
+exports.DictionariesController = void 0;
 var tslib_1 = __webpack_require__(0);
 var inversify_express_utils_1 = __webpack_require__(2);
 var authMiddleware_1 = __webpack_require__(3);
@@ -2299,39 +2536,37 @@ var DictionariesController = /*#__PURE__*/function () {
       return getDictionary;
     }()
   }, {
-    key: "getStaticDictionary",
+    key: "getFriendDictionary",
     value: function () {
-      var _getStaticDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(request, response) {
+      var _getFriendDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(request, response) {
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
                 _context4.next = 2;
-                return (0, base_1.responseAllCollection)(Dictionary_1.StaticDictionary, response, request);
+                return (0, base_1.responseFriendAllCollection)(Dictionary_1.StaticDictionary, response, request);
               case 2:
-                return _context4.abrupt("return", _context4.sent);
-              case 3:
               case "end":
                 return _context4.stop();
             }
           }
         }, _callee4);
       }));
-      function getStaticDictionary(_x7, _x8) {
-        return _getStaticDictionary.apply(this, arguments);
+      function getFriendDictionary(_x7, _x8) {
+        return _getFriendDictionary.apply(this, arguments);
       }
-      return getStaticDictionary;
+      return getFriendDictionary;
     }()
   }, {
-    key: "getStaticTranslatedDictionary",
+    key: "getStaticDictionary",
     value: function () {
-      var _getStaticTranslatedDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(request, response) {
+      var _getStaticDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(request, response) {
         return _regeneratorRuntime().wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
                 _context5.next = 2;
-                return (0, base_1.responseAllCollection)(Dictionary_1.StaticTranslatedDictionary, response, request);
+                return (0, base_1.responseAllCollection)(Dictionary_1.StaticDictionary, response, request);
               case 2:
                 return _context5.abrupt("return", _context5.sent);
               case 3:
@@ -2341,21 +2576,21 @@ var DictionariesController = /*#__PURE__*/function () {
           }
         }, _callee5);
       }));
-      function getStaticTranslatedDictionary(_x9, _x10) {
-        return _getStaticTranslatedDictionary.apply(this, arguments);
+      function getStaticDictionary(_x9, _x10) {
+        return _getStaticDictionary.apply(this, arguments);
       }
-      return getStaticTranslatedDictionary;
+      return getStaticDictionary;
     }()
   }, {
-    key: "getTranslatedDictionary",
+    key: "getStaticTranslatedDictionary",
     value: function () {
-      var _getTranslatedDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(request, response) {
+      var _getStaticTranslatedDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(request, response) {
         return _regeneratorRuntime().wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
                 _context6.next = 2;
-                return (0, base_1.responseAllCollection)(Dictionary_1.TranslatedDictionary, response, request);
+                return (0, base_1.responseAllCollection)(Dictionary_1.StaticTranslatedDictionary, response, request);
               case 2:
                 return _context6.abrupt("return", _context6.sent);
               case 3:
@@ -2365,7 +2600,31 @@ var DictionariesController = /*#__PURE__*/function () {
           }
         }, _callee6);
       }));
-      function getTranslatedDictionary(_x11, _x12) {
+      function getStaticTranslatedDictionary(_x11, _x12) {
+        return _getStaticTranslatedDictionary.apply(this, arguments);
+      }
+      return getStaticTranslatedDictionary;
+    }()
+  }, {
+    key: "getTranslatedDictionary",
+    value: function () {
+      var _getTranslatedDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(request, response) {
+        return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+          while (1) {
+            switch (_context7.prev = _context7.next) {
+              case 0:
+                _context7.next = 2;
+                return (0, base_1.responseAllCollection)(Dictionary_1.TranslatedDictionary, response, request);
+              case 2:
+                return _context7.abrupt("return", _context7.sent);
+              case 3:
+              case "end":
+                return _context7.stop();
+            }
+          }
+        }, _callee7);
+      }));
+      function getTranslatedDictionary(_x13, _x14) {
         return _getTranslatedDictionary.apply(this, arguments);
       }
       return getTranslatedDictionary;
@@ -2373,51 +2632,20 @@ var DictionariesController = /*#__PURE__*/function () {
   }, {
     key: "patchDictionary",
     value: function () {
-      var _patchDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(request, response) {
+      var _patchDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(request, response) {
         var _yield, id, oldValue;
-        return _regeneratorRuntime().wrap(function _callee7$(_context7) {
-          while (1) {
-            switch (_context7.prev = _context7.next) {
-              case 0:
-                _context7.next = 2;
-                return (0, base_1.getDataDocument)(request, Dictionary_1.Dictionary);
-              case 2:
-                _yield = _context7.sent;
-                id = _yield.id;
-                oldValue = _yield.oldValue;
-                _context7.next = 7;
-                return (0, base_1.patchDocument)(Dictionary_1.Dictionary, id, oldValue, request, response);
-              case 7:
-                return _context7.abrupt("return", _context7.sent);
-              case 8:
-              case "end":
-                return _context7.stop();
-            }
-          }
-        }, _callee7);
-      }));
-      function patchDictionary(_x13, _x14) {
-        return _patchDictionary.apply(this, arguments);
-      }
-      return patchDictionary;
-    }()
-  }, {
-    key: "patchStaticDictionary",
-    value: function () {
-      var _patchStaticDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(request, response) {
-        var _yield2, id, oldValue;
         return _regeneratorRuntime().wrap(function _callee8$(_context8) {
           while (1) {
             switch (_context8.prev = _context8.next) {
               case 0:
                 _context8.next = 2;
-                return (0, base_1.getDataDocument)(request, Dictionary_1.StaticDictionary);
+                return (0, base_1.getDataDocument)(request, Dictionary_1.Dictionary);
               case 2:
-                _yield2 = _context8.sent;
-                id = _yield2.id;
-                oldValue = _yield2.oldValue;
+                _yield = _context8.sent;
+                id = _yield.id;
+                oldValue = _yield.oldValue;
                 _context8.next = 7;
-                return (0, base_1.patchDocument)(Dictionary_1.StaticDictionary, id, oldValue, request, response);
+                return (0, base_1.patchDocument)(Dictionary_1.Dictionary, id, oldValue, request, response);
               case 7:
                 return _context8.abrupt("return", _context8.sent);
               case 8:
@@ -2427,28 +2655,28 @@ var DictionariesController = /*#__PURE__*/function () {
           }
         }, _callee8);
       }));
-      function patchStaticDictionary(_x15, _x16) {
-        return _patchStaticDictionary.apply(this, arguments);
+      function patchDictionary(_x15, _x16) {
+        return _patchDictionary.apply(this, arguments);
       }
-      return patchStaticDictionary;
+      return patchDictionary;
     }()
   }, {
-    key: "patchTranslatedDictionary",
+    key: "patchStaticDictionary",
     value: function () {
-      var _patchTranslatedDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(request, response) {
-        var _yield3, id, oldValue;
+      var _patchStaticDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(request, response) {
+        var _yield2, id, oldValue;
         return _regeneratorRuntime().wrap(function _callee9$(_context9) {
           while (1) {
             switch (_context9.prev = _context9.next) {
               case 0:
                 _context9.next = 2;
-                return (0, base_1.getDataDocument)(request, Dictionary_1.TranslatedDictionary);
+                return (0, base_1.getDataDocument)(request, Dictionary_1.StaticDictionary);
               case 2:
-                _yield3 = _context9.sent;
-                id = _yield3.id;
-                oldValue = _yield3.oldValue;
+                _yield2 = _context9.sent;
+                id = _yield2.id;
+                oldValue = _yield2.oldValue;
                 _context9.next = 7;
-                return (0, base_1.patchDocument)(Dictionary_1.TranslatedDictionary, id, oldValue, request, response);
+                return (0, base_1.patchDocument)(Dictionary_1.StaticDictionary, id, oldValue, request, response);
               case 7:
                 return _context9.abrupt("return", _context9.sent);
               case 8:
@@ -2458,28 +2686,28 @@ var DictionariesController = /*#__PURE__*/function () {
           }
         }, _callee9);
       }));
-      function patchTranslatedDictionary(_x17, _x18) {
-        return _patchTranslatedDictionary.apply(this, arguments);
+      function patchStaticDictionary(_x17, _x18) {
+        return _patchStaticDictionary.apply(this, arguments);
       }
-      return patchTranslatedDictionary;
+      return patchStaticDictionary;
     }()
   }, {
-    key: "patchStaticTranslatedDictionary",
+    key: "patchTranslatedDictionary",
     value: function () {
-      var _patchStaticTranslatedDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee10(request, response) {
-        var _yield4, id, oldValue;
+      var _patchTranslatedDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee10(request, response) {
+        var _yield3, id, oldValue;
         return _regeneratorRuntime().wrap(function _callee10$(_context10) {
           while (1) {
             switch (_context10.prev = _context10.next) {
               case 0:
                 _context10.next = 2;
-                return (0, base_1.getDataDocument)(request, Dictionary_1.StaticTranslatedDictionary);
+                return (0, base_1.getDataDocument)(request, Dictionary_1.TranslatedDictionary);
               case 2:
-                _yield4 = _context10.sent;
-                id = _yield4.id;
-                oldValue = _yield4.oldValue;
+                _yield3 = _context10.sent;
+                id = _yield3.id;
+                oldValue = _yield3.oldValue;
                 _context10.next = 7;
-                return (0, base_1.patchDocument)(Dictionary_1.StaticTranslatedDictionary, id, oldValue, request, response);
+                return (0, base_1.patchDocument)(Dictionary_1.TranslatedDictionary, id, oldValue, request, response);
               case 7:
                 return _context10.abrupt("return", _context10.sent);
               case 8:
@@ -2489,7 +2717,38 @@ var DictionariesController = /*#__PURE__*/function () {
           }
         }, _callee10);
       }));
-      function patchStaticTranslatedDictionary(_x19, _x20) {
+      function patchTranslatedDictionary(_x19, _x20) {
+        return _patchTranslatedDictionary.apply(this, arguments);
+      }
+      return patchTranslatedDictionary;
+    }()
+  }, {
+    key: "patchStaticTranslatedDictionary",
+    value: function () {
+      var _patchStaticTranslatedDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee11(request, response) {
+        var _yield4, id, oldValue;
+        return _regeneratorRuntime().wrap(function _callee11$(_context11) {
+          while (1) {
+            switch (_context11.prev = _context11.next) {
+              case 0:
+                _context11.next = 2;
+                return (0, base_1.getDataDocument)(request, Dictionary_1.StaticTranslatedDictionary);
+              case 2:
+                _yield4 = _context11.sent;
+                id = _yield4.id;
+                oldValue = _yield4.oldValue;
+                _context11.next = 7;
+                return (0, base_1.patchDocument)(Dictionary_1.StaticTranslatedDictionary, id, oldValue, request, response);
+              case 7:
+                return _context11.abrupt("return", _context11.sent);
+              case 8:
+              case "end":
+                return _context11.stop();
+            }
+          }
+        }, _callee11);
+      }));
+      function patchStaticTranslatedDictionary(_x21, _x22) {
         return _patchStaticTranslatedDictionary.apply(this, arguments);
       }
       return patchStaticTranslatedDictionary;
@@ -2497,23 +2756,25 @@ var DictionariesController = /*#__PURE__*/function () {
   }, {
     key: "setDictionary",
     value: function () {
-      var _setDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee11(request, response) {
-        return _regeneratorRuntime().wrap(function _callee11$(_context11) {
+      var _setDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee12(request, response) {
+        var idUser;
+        return _regeneratorRuntime().wrap(function _callee12$(_context12) {
           while (1) {
-            switch (_context11.prev = _context11.next) {
+            switch (_context12.prev = _context12.next) {
               case 0:
-                _context11.next = 2;
-                return (0, base_1.setDocument)(Dictionary_1.Dictionary, request, response);
-              case 2:
-                return _context11.abrupt("return", _context11.sent);
+                idUser = request._user.idUser;
+                _context12.next = 3;
+                return (0, base_1.setDocument)(Dictionary_1.Dictionary, request, response, idUser);
               case 3:
+                return _context12.abrupt("return", _context12.sent);
+              case 4:
               case "end":
-                return _context11.stop();
+                return _context12.stop();
             }
           }
-        }, _callee11);
+        }, _callee12);
       }));
-      function setDictionary(_x21, _x22) {
+      function setDictionary(_x23, _x24) {
         return _setDictionary.apply(this, arguments);
       }
       return setDictionary;
@@ -2521,23 +2782,25 @@ var DictionariesController = /*#__PURE__*/function () {
   }, {
     key: "setTranslatedDictionary",
     value: function () {
-      var _setTranslatedDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee12(request, response) {
-        return _regeneratorRuntime().wrap(function _callee12$(_context12) {
+      var _setTranslatedDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee13(request, response) {
+        var idUser;
+        return _regeneratorRuntime().wrap(function _callee13$(_context13) {
           while (1) {
-            switch (_context12.prev = _context12.next) {
+            switch (_context13.prev = _context13.next) {
               case 0:
-                _context12.next = 2;
-                return (0, base_1.setDocument)(Dictionary_1.TranslatedDictionary, request, response);
-              case 2:
-                return _context12.abrupt("return", _context12.sent);
+                idUser = request._user.idUser;
+                _context13.next = 3;
+                return (0, base_1.setDocument)(Dictionary_1.TranslatedDictionary, request, response, idUser);
               case 3:
+                return _context13.abrupt("return", _context13.sent);
+              case 4:
               case "end":
-                return _context12.stop();
+                return _context13.stop();
             }
           }
-        }, _callee12);
+        }, _callee13);
       }));
-      function setTranslatedDictionary(_x23, _x24) {
+      function setTranslatedDictionary(_x25, _x26) {
         return _setTranslatedDictionary.apply(this, arguments);
       }
       return setTranslatedDictionary;
@@ -2545,23 +2808,25 @@ var DictionariesController = /*#__PURE__*/function () {
   }, {
     key: "setStaticDictionary",
     value: function () {
-      var _setStaticDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee13(request, response) {
-        return _regeneratorRuntime().wrap(function _callee13$(_context13) {
+      var _setStaticDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee14(request, response) {
+        var idUser;
+        return _regeneratorRuntime().wrap(function _callee14$(_context14) {
           while (1) {
-            switch (_context13.prev = _context13.next) {
+            switch (_context14.prev = _context14.next) {
               case 0:
-                _context13.next = 2;
-                return (0, base_1.setDocument)(Dictionary_1.StaticDictionary, request, response);
-              case 2:
-                return _context13.abrupt("return", _context13.sent);
+                idUser = request._user.idUser;
+                _context14.next = 3;
+                return (0, base_1.setDocument)(Dictionary_1.StaticDictionary, request, response, idUser);
               case 3:
+                return _context14.abrupt("return", _context14.sent);
+              case 4:
               case "end":
-                return _context13.stop();
+                return _context14.stop();
             }
           }
-        }, _callee13);
+        }, _callee14);
       }));
-      function setStaticDictionary(_x25, _x26) {
+      function setStaticDictionary(_x27, _x28) {
         return _setStaticDictionary.apply(this, arguments);
       }
       return setStaticDictionary;
@@ -2569,26 +2834,71 @@ var DictionariesController = /*#__PURE__*/function () {
   }, {
     key: "setStaticTranslatedDictionary",
     value: function () {
-      var _setStaticTranslatedDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee14(request, response) {
-        return _regeneratorRuntime().wrap(function _callee14$(_context14) {
+      var _setStaticTranslatedDictionary = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee15(request, response) {
+        var idUser;
+        return _regeneratorRuntime().wrap(function _callee15$(_context15) {
           while (1) {
-            switch (_context14.prev = _context14.next) {
+            switch (_context15.prev = _context15.next) {
               case 0:
-                _context14.next = 2;
-                return (0, base_1.setDocument)(Dictionary_1.StaticTranslatedDictionary, request, response);
-              case 2:
-                return _context14.abrupt("return", _context14.sent);
+                idUser = request._user.idUser;
+                _context15.next = 3;
+                return (0, base_1.setDocument)(Dictionary_1.StaticTranslatedDictionary, request, response, idUser);
               case 3:
+                return _context15.abrupt("return", _context15.sent);
+              case 4:
               case "end":
-                return _context14.stop();
+                return _context15.stop();
             }
           }
-        }, _callee14);
+        }, _callee15);
       }));
-      function setStaticTranslatedDictionary(_x27, _x28) {
+      function setStaticTranslatedDictionary(_x29, _x30) {
         return _setStaticTranslatedDictionary.apply(this, arguments);
       }
       return setStaticTranslatedDictionary;
+    }()
+  }, {
+    key: "removeAllWords",
+    value: function () {
+      var _removeAllWords = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee16(request, response) {
+        var idUser;
+        return _regeneratorRuntime().wrap(function _callee16$(_context16) {
+          while (1) {
+            switch (_context16.prev = _context16.next) {
+              case 0:
+                idUser = request._user.idUser;
+                _context16.next = 3;
+                return Dictionary_1.TranslatedDictionary.find({
+                  user: idUser
+                }).deleteMany().exec();
+              case 3:
+                _context16.next = 5;
+                return Dictionary_1.StaticTranslatedDictionary.find({
+                  user: idUser
+                }).deleteMany().exec();
+              case 5:
+                _context16.next = 7;
+                return Dictionary_1.Dictionary.find({
+                  user: idUser
+                }).deleteMany().exec();
+              case 7:
+                _context16.next = 9;
+                return Dictionary_1.StaticDictionary.find({
+                  user: idUser
+                }).deleteMany().exec();
+              case 9:
+                return _context16.abrupt("return", response.send());
+              case 10:
+              case "end":
+                return _context16.stop();
+            }
+          }
+        }, _callee16);
+      }));
+      function removeAllWords(_x31, _x32) {
+        return _removeAllWords.apply(this, arguments);
+      }
+      return removeAllWords;
     }()
   }]);
   return DictionariesController;
@@ -2596,6 +2906,7 @@ var DictionariesController = /*#__PURE__*/function () {
 tslib_1.__decorate([(0, inversify_express_utils_1.httpDelete)('/dictionary/:id'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], DictionariesController.prototype, "deleteWord", null);
 tslib_1.__decorate([(0, inversify_express_utils_1.httpDelete)('/translatedDictionary/:id'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], DictionariesController.prototype, "deleteTranslatedWord", null);
 tslib_1.__decorate([(0, inversify_express_utils_1.httpGet)('/dictionary'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], DictionariesController.prototype, "getDictionary", null);
+tslib_1.__decorate([(0, inversify_express_utils_1.httpGet)('/friendDictionary'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], DictionariesController.prototype, "getFriendDictionary", null);
 tslib_1.__decorate([(0, inversify_express_utils_1.httpGet)('/staticDictionary'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], DictionariesController.prototype, "getStaticDictionary", null);
 tslib_1.__decorate([(0, inversify_express_utils_1.httpGet)('/staticTranslatedDictionary'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], DictionariesController.prototype, "getStaticTranslatedDictionary", null);
 tslib_1.__decorate([(0, inversify_express_utils_1.httpGet)('/translatedDictionary'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], DictionariesController.prototype, "getTranslatedDictionary", null);
@@ -2607,9 +2918,10 @@ tslib_1.__decorate([(0, inversify_express_utils_1.httpPost)('/setDictionary'), t
 tslib_1.__decorate([(0, inversify_express_utils_1.httpPost)('/setTranslatedDictionary'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], DictionariesController.prototype, "setTranslatedDictionary", null);
 tslib_1.__decorate([(0, inversify_express_utils_1.httpPost)('/setStaticDictionary'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], DictionariesController.prototype, "setStaticDictionary", null);
 tslib_1.__decorate([(0, inversify_express_utils_1.httpPost)('/setStaticTranslatedDictionary'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], DictionariesController.prototype, "setStaticTranslatedDictionary", null);
+tslib_1.__decorate([(0, inversify_express_utils_1.httpDelete)('/removeAllWords'), tslib_1.__metadata("design:type", Function), tslib_1.__metadata("design:paramtypes", [Object, Object]), tslib_1.__metadata("design:returntype", Promise)], DictionariesController.prototype, "removeAllWords", null);
 DictionariesController = tslib_1.__decorate([(0, inversify_express_utils_1.controller)('/api/dictionaries', authMiddleware_1.authMiddleWare)], DictionariesController);
 exports.DictionariesController = DictionariesController;
-exports.dictionariesController = new DictionariesController();
+// export const dictionariesController = new DictionariesController()
 
 /***/ }),
 /* 33 */
@@ -2661,7 +2973,14 @@ exports.dictionarySchema = new mongoose_1.Schema({
     partsOfSpeech: {
       type: Object,
       required: true
-    }
+    },
+    authors: [{
+      date: Date,
+      author: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'User'
+      }
+    }]
   }
 }, {
   timestamps: true
@@ -2949,7 +3268,7 @@ var WsServer = /*#__PURE__*/function () {
             while (1) {
               switch (_context2.prev = _context2.next) {
                 case 0:
-                  // debugger
+                  // 
                   // console.log(socket)
                   _this.usersOnline = _objectSpread(_objectSpread({}, _this.usersOnline), {}, _defineProperty({}, roomID, _objectSpread(_objectSpread({}, _this.usersOnline[roomID]), {}, _defineProperty({}, userID, userID))));
                   console.log({
