@@ -605,23 +605,22 @@ function _updateUser() {
       while (1) {
         switch (_context8.prev = _context8.next) {
           case 0:
-            debugger;
             idUser = request._user.idUser;
-            _context8.next = 4;
+            _context8.next = 3;
             return Model.findOne({
               _id: idUser
             });
-          case 4:
+          case 3:
             userModel = _context8.sent;
-            _context8.next = 7;
+            _context8.next = 6;
             return Model.findOneAndUpdate({
               _id: idUser
             }, _objectSpread(_objectSpread({}, userModel === null || userModel === void 0 ? void 0 : userModel.toObject()), updatedField), {
               "new": true
             });
-          case 7:
+          case 6:
             return _context8.abrupt("return", _context8.sent);
-          case 8:
+          case 7:
           case "end":
             return _context8.stop();
         }
@@ -1133,9 +1132,9 @@ var HttpServer = /*#__PURE__*/function () {
       var build = this.app.build();
       // this.app.build.
       console.log(6);
-      var app = build.listen(process.env.PORT  || false);
+      var app = build.listen(process.env.PORT || false);
       // build.on('request', app as any)
-      console.log("Application listening on port ".concat(process.env.PORT , "..."));
+      console.log("Application listening on port ".concat(process.env.PORT, "..."));
       this.containerDI.bind(interfaces_1.TYPES.App).toConstantValue(app);
     }
   }]);
@@ -2062,12 +2061,11 @@ var UserController = /*#__PURE__*/function () {
               case 0:
                 idUser = request._user.idUser;
                 _request$body = request.body, score = _request$body.score, word = _request$body.word, actionType = _request$body.actionType;
-                debugger;
-                _context8.next = 5;
+                _context8.next = 4;
                 return User_1.User.findOne({
                   _id: idUser
                 });
-              case 5:
+              case 4:
                 userModel = _context8.sent;
                 historyScore = {
                   date: new Date(),
@@ -2080,13 +2078,13 @@ var UserController = /*#__PURE__*/function () {
                   score: userModel.toObject().score + score,
                   historyScore: userModel.toObject().historyScore.concat(historyScore)
                 };
-                _context8.next = 10;
+                _context8.next = 9;
                 return (0, base_1.updateUser)(request, User_1.User, updatedFields);
-              case 10:
+              case 9:
                 return _context8.abrupt("return", response.send({
                   score: updatedFields.score
                 }));
-              case 11:
+              case 10:
               case "end":
                 return _context8.stop();
             }
@@ -2102,30 +2100,30 @@ var UserController = /*#__PURE__*/function () {
     key: "patchFriendScore",
     value: function () {
       var _patchFriendScore = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(request, response) {
-        var _request$body2, score, friendId, word, actionType, userModel, historyScore, updatedFields;
+        var idUser, _request$body2, score, friendId, word, actionType, userModel, historyScore, updatedFields;
         return _regeneratorRuntime().wrap(function _callee9$(_context9) {
           while (1) {
             switch (_context9.prev = _context9.next) {
               case 0:
+                idUser = request._user.idUser;
                 _request$body2 = request.body, score = _request$body2.score, friendId = _request$body2.friendId, word = _request$body2.word, actionType = _request$body2.actionType;
-                _context9.next = 3;
+                _context9.next = 4;
                 return User_1.User.findOne({
                   _id: friendId
                 });
-              case 3:
+              case 4:
                 userModel = _context9.sent;
                 historyScore = {
                   date: new Date(),
                   word: word,
                   value: score,
                   actionType: actionType,
-                  actionOwner: friendId
+                  actionOwner: idUser
                 };
                 updatedFields = {
                   score: userModel.toObject().score + score,
                   historyScore: userModel.toObject().historyScore.concat(historyScore)
                 };
-                debugger;
                 _context9.next = 9;
                 return (0, base_1.updateFriend)(User_1.User, updatedFields, friendId);
               case 9:
