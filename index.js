@@ -1586,7 +1586,6 @@ var tslib_1 = __webpack_require__(0);
 var ApiError_1 = __webpack_require__(6);
 var User_1 = __webpack_require__(11);
 var jsonwebtoken_1 = tslib_1.__importDefault(__webpack_require__(10));
-// import { jwtSecret } from './../../config/default.json'
 var inversify_express_utils_1 = __webpack_require__(2);
 var AuthController = /*#__PURE__*/function () {
   function AuthController() {
@@ -1668,7 +1667,7 @@ var AuthController = /*#__PURE__*/function () {
                   email: email,
                   language: 'en',
                   translatedLanguage: 'ua',
-                  score: 0
+                  score: 1000
                 });
                 _context2.next = 9;
                 return user.setPassword(password);
